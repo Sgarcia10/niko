@@ -1,0 +1,25 @@
+footer {
+	padding: 30px 0px 10px 0;
+	width: 100%;
+	background: #111111;
+  bottom: 0px;
+	position: relative;
+	height: auto;
+}
+
+.legal {
+}
+
+.wrap {
+	height: auto;
+	background: #111111;
+	width: 100%;
+	padding-left: 50px;
+  color: rgb(170, 158, 151);
+}
+
+p{
+	color: #818181;
+	font-size: 0.6rem;
+	line-height: 0.7rem;
+}

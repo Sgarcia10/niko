@@ -1,1 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
+
+html,body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.container-full{
+  position: relative;
+  padding: 90px 0 0 0;
+  width: 100%;
+  text-align: center;
+}
+
+.container-cover {
+	position: relative;
+  padding-left: 0;
+  padding-right: 0;
+	min-width: 100%;
+  height: auto;
+	background: url(./assets/bg-pattern.png),#141877;
+	background: url(./assets/bg-pattern.png),-webkit-linear-gradient(to left,#141877,#151933);
+	background: url(./assets/bg-pattern.png),linear-gradient(to right,#141877,#151933);
+	color: #fff;
+}
+
+@media screen and (min-width : 960px){
+  .container-full{
+    padding-top: 100px;
+  }
+  .container {
+    max-width: 960px;
+  }
+}
