@@ -1,0 +1,218 @@
+<div class="container">
+
+    <div class="overlay" *ngIf="editable"></div>
+    <!-- <div *ngFor="let option of pregunta.options">
+      <div> {{option._id}}.{{option.text}}   {{option.jump}}   {{option.textBox}} </div>
+      <div *ngIf="option.message">
+          {{option.message.title}}   {{option.message.text}}   {{option.message.uploadURL}}</div>
+    </div> -->
+    <form  #questionForm="ngForm" (ngSubmit)="save()">
+        <div class="card">
+            <div class="card-header">
+                <h3 for="title">Pregunta {{pos}}</h3>
+            </div>
+            <div class="card-block">
+                <div class="form-group">
+                    <textarea class="form-control" id="title" rows="2"
+                      [(ngModel)]="pregunta.title" name="title" #title="ngModel"
+                      placeholder="¿Pregunta?" required></textarea>
+                    <div *ngIf="title.errors "
+                        class="alert alert-danger">
+                       <div [hidden]="!title.errors.required">
+                         Pregunta requerida
+                       </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="form-group row">
+                    <label class="col-sm-3">Tipo de Respuesta:</label>
+                    <div class="col-sm-3" *ngFor="let type of types; let i = index">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                              <input type="radio" class="form-check-input" name="tipo"
+                                id="'type'+i" value="{{type.type}}" [checked]="isSelectedType(i)"
+                                [(ngModel)]="pregunta.type">
+                                  {{type.text}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row divider">
+                    <div class="form-check col-sm-12 ">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" name="helping"
+                            value="helping" (click)="toggleHelp()">
+                              Añadir ayuda
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!esAbierta()" class="container-options">
+            <div class="card" *ngFor="let option of pregunta.options; let j = index">
+                <div *ngIf="isOptionEditable(j)" class="card-header" style="z-index:2;">
+                    <div class="row" >
+                        <div class="col-sm-1 btn-option">
+                          <div class="form-check disabled">
+                              <label class="form-check-label">
+                                  <input class="form-check-input" type="radio"
+                                    disabled> {{option._id}}
+                              </label>
+                          </div>
+                        </div>
+                        <div class="form-group  col-sm-9">
+                            <textarea class="form-control"
+                             rows="2" [(ngModel)]="option.text" [value]="option.text" name="'optionText'+j"
+                              ></textarea>
+                              <!-- <div *ngIf="'formErrors.optionText'+j" class="alert alert-danger">
+                                  {{ formErrors.option }}
+                              </div> -->
+                        </div>
+                        <div class="col-sm-1 btn-option">
+                              <a id="add-option-button" class="btn btn-primary"(click)="acceptOption(j)">
+                                <div id="add-option-text">v</div>
+                              </a>
+                        </div>
+                        <div class="col-sm-1 btn-option">
+                              <a id="delete-option-button" class="btn btn-primary"(click)="cancelOption(j)">
+                                <div id="delete-option-text">x</div>
+                              </a>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!isOptionEditable(j)" class="card-header" >
+                    <div class="row">
+                        <div class="col-sm-1 btn-option">
+                          <div class="form-check form-check-inline disabled">
+                              <label class="form-check-label">
+                                  <input class="form-check-input" type="radio"
+                                    disabled> {{option._id}}
+                              </label>
+                          </div>
+                        </div>
+                        <div class="form-group  col-sm-9">
+                            <div  class="option-text">
+                                {{option.text}}
+                           </div>
+                              <!-- <div *ngIf="'formErrors.optionText'+j" class="alert alert-danger">
+                                  {{ formErrors.option }}
+                              </div> -->
+                        </div>
+                        <div class="col-sm-1 btn-option">
+                              <a id="edit-option-button" class="btn btn-primary"(click)="editOption(j)">
+                                <div id="edit-option-text">!</div>
+                              </a>
+                        </div>
+                        <div class="col-sm-1 btn-option">
+                              <a id="delete-option-button" class="btn btn-primary"(click)="deleteOption(j)">
+                                <div id="delete-option-text">-</div>
+                              </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-block-option">
+                    <div *ngIf="esUnica()" class="form-group row">
+                        <div class="form-check col-sm-4">
+                            <label class="form-check-label">
+                                <input class="form-check-input" (click)="toggleJump(j)"
+                                   type="checkbox"> Saltar numero de preguntas:
+                            </label>
+                        </div>
+                        <div *ngIf="option.jump>0" class="col-sm-2">
+                            <input class="form-control" type="number" value="1"
+                              name="'jump'+j" [(ngModel)]="option.jump">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox"
+                                  name="'textBox'+j" [(ngModel)]="option.textBox">
+                                  Agregar cuadro de texto
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" (click)="toggleMessage(j)"
+                                  type="checkbox"> Agregar Mensaje:
+                            </label>
+                        </div>
+                    </div>
+                    <div *ngIf="isMessage(j)" class="card-message ">
+                        <div class="form-group">
+                            <label for="titleMessage">Titulo</label>
+                            <input type="text" class="form-control" name="'titleMessage'+j"
+                            [(ngModel)]="option.message.title" placeholder="Titulo">
+                        </div>
+                        <div class="form-group">
+                            <label for="textMessage">Mensaje:</label>
+                            <textarea class="form-control" rows="3" name="'textMessage'+j"
+                              [(ngModel)]="option.message.text"></textarea>
+                        </div>
+                        <div class="row row-download">
+                                <button  *ngIf="!option.message.downloadURL" class="btn btn-primary col-sm-3"
+                                type="button" (click)="downloadURL(j)">Agregar Archivo</button>
+                                <div *ngIf="option.message.downloadURL" class="form-group col-sm-12">
+                                    <label for="nameDownload">Nombre del archivo</label>
+                                    <input  type="text" class="form-control" name="'textUploadURL'+j"
+                                    [(ngModel)]="option.message.downloadURL.name" placeholder="Nombre del archivo">
+                                </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="form-check col">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox"
+                                      name="'uploadURL'+j" [(ngModel)]="option.message.uploadURL">
+                                        El estudiante sube documento
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="add-option">
+                <a id="add-option-button" (click)="addOption(i)" class="btn btn-primary">
+                  <h6 id="add-option-text">+</h6>
+                </a>
+            </div>
+        </div>
+        <div *ngIf="pregunta.help">
+            <div class="card card-message card-block">
+                <div class="form-group">
+                    <label for="titleMessage">Titulo de ayuda:</label>
+                    <input type="text" class="form-control" name="helpTitle"
+                    [(ngModel)]="pregunta.help.title" placeholder="Titulo">
+                </div>
+                <div class="form-group">
+                    <label for="textMessage">Mensaje de ayuda:</label>
+                    <textarea class="form-control" rows="3" name="helpText"
+                      [(ngModel)]="pregunta.help.text"></textarea>
+                </div>
+                <div class="row row-download">
+                        <button  *ngIf="!pregunta.help.downloadURL" class="btn btn-primary"
+                        type="button" (click)="helpDownloadURL(j)">Agregar Archivo</button>
+                        <div *ngIf="pregunta.help.downloadURL" class="form-group col-sm-12">
+                            <label for="nameDownload">Nombre del archivo</label>
+                            <input  type="text" class="form-control" name="textHelpUploadURL"
+                            [(ngModel)]="pregunta.help.name" placeholder="Nombre del archivo">
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-sm-center row-form">
+            <div class="col-sm-auto">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+            <div class="col-sm-auto">
+                <button type="button" class="btn btn-danger" (click)="cancel()">
+                  Cancelar</button>
+            </div>
+        </div>
+    </form>
+
+</div>

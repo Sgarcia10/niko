@@ -1,0 +1,141 @@
+
+
+:root{
+  background-color: #ff0000;   /* red */
+  --color-TitleShadow: #5d5019;   /* green */
+  --color-Title: #fa165b;   /* blue */
+}
+
+#navbar{
+  position: absolute;
+  top: 0;
+  margin-top: 10px;
+  min-width: 100%;
+  background-color: rgba(242, 242, 245, 0);
+  margin-bottom: 10px;
+}
+
+.row {
+  padding-top: 5px;
+  /*max-height: 80px;*/
+}
+
+.col-logo{
+  max-width: 200px;
+
+}
+
+.col-logout{
+  /*max-width: 50px;
+  max-height: 50px;*/
+  text-align: right;
+}
+
+#andes {
+    height: auto;
+    max-width: 100%;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+#logout {
+    height: auto;
+    vertical-align: middle;
+    float: center;
+    max-width: 70px;
+    cursor: pointer;
+}
+
+.logout-icon {
+  background-image: url('../../assets/logout.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: auto;
+  max-height: 50px;
+  max-width: 50px;
+  cursor: pointer;
+}
+
+.title {
+  min-width: 100%;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.title span{
+  font-family: 'Pacifico', cursive;
+  font-weight: 500;
+  font-size: 40px;
+  color: #ffffff;
+  text-shadow: 1px 1px #5d5019;
+  max-width: auto;
+  margin: 0;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+
+}
+
+.title:hover span{
+  cursor: pointer;
+}
+
+@media screen and (min-width: 992px) {
+    #navbar.container{
+        max-width: 900px;
+    }
+    #logout {
+      max-width: 24%;
+    }
+    #navbar{
+      max-height: 89px;
+    }
+    .logout-icon{
+      max-height: 50px;
+      max-width: 50px;
+    }
+}
+@media screen and (max-width : 992px){
+  #logout {
+    max-width: 24%;
+  }
+  .col-logo{
+    max-width: 150px;
+  }
+  .logout-icon{
+    max-height: 50px;
+    max-width: 50px;
+  }
+}
+@media screen and (max-width : 768px){
+  #logout {
+    max-width: 30%;
+  }
+  #navbar{
+    max-height: 50px;
+  }
+  .col-logo{
+    max-width: 150px;
+  }
+  .logout-icon{
+    max-height: 40px;
+    max-width: 40px;
+  }
+  .title span{
+    font-size: 30px;
+  }
+}
+@media screen and (max-width : 576px){
+  #logout {
+    max-width: 35%;
+    max-height: 50px;
+  }
+  .logout-icon{
+    max-height: 40px;
+    max-width: 40px;
+  }
+}

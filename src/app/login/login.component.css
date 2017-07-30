@@ -1,0 +1,143 @@
+.container-cover{
+  background-image:url('../../assets/Caneca.jpg');
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+
+.container-login{
+  min-width: 100%;
+  position: relative;
+}
+
+
+.container-form{
+  border-style: solid;
+  border-color: rgb(171, 175, 181);
+  border-radius: 3px;
+  border-width: thin;
+  background-color: rgba(218, 218, 219, 0.41);
+  padding: 25px;
+}
+
+.form-login{
+  max-width: 100%;
+  font-size: 18px;
+  font-weight: bolder;
+  text-align: justify;
+}
+
+.login-text{
+  text-align: center;
+  max-width: auto;
+}
+
+.row{
+  margin: 0;
+}
+
+.textInicio{
+  font-family: Catamaran,Helvetica,Arial,sans-serif;
+  font-weight: 200;
+  letter-spacing: 1px;
+}
+
+h1{
+  font-family: 'Raleway', sans-serif;
+  font-size: 50px;
+  font-weight: 300;
+  line-height: 1.2;
+  word-spacing: 1.8px;
+  max-width: inherit;
+}
+
+.btn{
+  margin-top: 15px;
+  min-width: 100%;
+  font-weight: bold;
+}
+
+.col-login{
+  text-align: center;
+}
+
+@media screen and (min-width : 992px){
+  h1 {
+    font-size: 43px;
+  }
+  .text-inicio{
+    padding-top: 30px;
+    text-align: left;
+  }
+  .container-full{
+    position: absolute;
+    top:0; bottom: 0; left: 0; right: 0;
+  }
+  .container-login{
+    position: relative;
+    top: 50%;
+    margin-top:-110px;
+    min-width: 100%;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+@media screen and (max-width : 992px){
+  .text-inicio{
+    text-align: left;
+    padding: 100px 40px 50px 40px;
+  }
+  h1 {
+    font-size: 35px;
+  }
+  .container-login{
+    position: relative;
+    padding: 0;
+    margin: 0;
+  }
+  .container-form{
+    max-width: 500px;
+    margin: auto;
+  }
+}
+@media screen and (max-width : 768px){
+  .text-inicio{
+    text-align: center;
+    padding: 70px 15px 50px 15px;
+  }
+  h1 {
+    font-size: 30px;
+  }
+  .container-login{
+    position: relative;
+    padding: 0;
+    margin: 0;
+  }
+  .container-form{
+    max-width: 500px;
+    margin: auto;
+  }
+  .col-sm-12{
+    padding: 10px;
+  }
+}
+@media screen and (max-width : 576px){
+  .text-inicio{
+    text-align: center;
+    padding: 60px 15px 50px 15px;
+  }
+  h1 {
+    font-size: 32px;
+  }
+  .container-login{
+    position: relative;
+    padding: 0;
+    margin: 0;
+  }
+  .container-form{
+    max-width: inherit;
+    margin: auto;
+  }
+  .col-12{
+    padding: 0;
+  }
+}

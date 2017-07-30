@@ -1,0 +1,85 @@
+<div class="container">
+    <div class="overlay" *ngIf="editable || newCategory"></div>
+    <div class="card" *ngFor="let category of categories; let i = index">
+        <div class="card-header" [ngStyle]="{'z-index' : getZ(i), 'cursor': getCursor(i)}"
+            [attr.data-toggle]="isCollapsible(i)"  [attr.href]="'#collapse'+i"
+            aria-expanded="false" [attr.aria-controls]="'collapse'+i">
+            <form  *ngIf="isEditable(i)" #categoryForm="ngForm" (ngSubmit)="save()">
+                <div class = "row align-items-center">
+                    <div class="col-sm-8">
+                        <div  class="form-group">
+                            <input type="text" id="name" class="form-control input-category-name"
+                                 required name="name" [(ngModel)]="category.name"
+                                 #name="ngModel" placeholder="Category">
+                             <div *ngIf="name.errors && (name.dirty || name.touched)"
+                                 class="alert alert-danger">
+                                <div [hidden]="!name.errors.required">
+                                  Nombre requerido
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 category-buttons">
+                        <div class="btn-group">
+                            <button type="submit" class="btn category-button-edit category-button">
+                              Bien</button>
+                            <button type="button" class="btn category-button-delete category-button"
+                              (click)="cancel(i)">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div *ngIf="!isEditable(i)" class = "row">
+                <div class="col-sm-8">
+                      <div class="category-text"> {{category.name}} </div>
+                </div>
+                <div class="col-lg-4 category-buttons">
+                    <div class="btn-group">
+                        <button type="button" class="btn category-button-edit category-button"
+                             (click)="edit(i)">Editar</button>
+                        <button type="button" class="btn category-button-delete category-button"
+                              (click)="delete(i)">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [attr.id]="'collapse'+i" class="collapse" >
+            <div class="container-questions">
+                <div class="row row-questions"  *ngFor="let question of category.questions; let j = index">
+                    <div class="col-sm-1 col-q">
+                        <div class="col-questions">
+                            <h4 class="pos-question">{{question.pos}}</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-9 col-q">
+                        <a class="question-text" (click)="editQuestion(i,j)">{{question.title}}</a>
+                    </div>
+                    <div class="col-sm-1 col-q">
+                        <div class="col-questions">
+                            <a (click)="addQuestion(i)" class="btn question-button add-button">
+                                <h6 class="question-text-button">^</h6>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-q">
+                        <div class="col-questions">
+                            <a (click)="removeQuestion(i,j)" class="btn question-button remove-button">
+                                <p class="question-text-button">x</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="add-question">
+                <button (click)="addQuestion(i)" class="btn question-button add-question-button">
+                  </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="add-category">
+        <a (click)="add()" class="btn add-category-button">Agregar</a>
+    </div>
+
+
+</div>

@@ -1,0 +1,17 @@
+.container-cover{
+  	background: url(../../assets/bg-pattern.png),#b66d21;
+  	background: url(../../assets/bg-pattern.png),-webkit-linear-gradient(to left,#b66d21,#500909);
+  	background: url(../../assets/bg-pattern.png),linear-gradient(to right,#b66d21,#99401f);
+}
+
+.card-block{
+  padding: 0;
+  background-color: transparent;
+}
+
+.card{
+  padding: 0;
+  background-color: transparent;
+  border: none none none none;
+  border-width: 0;
+}

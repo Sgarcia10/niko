@@ -1,0 +1,17 @@
+.container-cover{
+  	background: url(../../assets/bg-pattern.png),#141877;
+  	background: url(../../assets/bg-pattern.png),-webkit-linear-gradient(to left,#5e62c3,#212122);
+  	background: url(../../assets/bg-pattern.png),linear-gradient(to right,#5e62c3,#212122);
+}
+
+.container-full{
+  position: absolute;
+  top:0; bottom: 0; left: 0; right: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.title{
+  position: relative;
+  top: 50%;
+}

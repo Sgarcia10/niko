@@ -1,0 +1,21 @@
+<div id='navbar'>
+  <div class="container">
+      <div class="row align-items-center ustify-content-start">
+          <div *ngIf="!isLogin()" class="col ">
+              <div class="col-logo">
+                  <img id='andes' src="../assets/logo_uniandes_w.png">
+              </div>
+          </div>
+          <div class="col" (click)="inicio()">
+              <div class="title" [style.text-align]="isLogin()? 'left':'center'">
+                  <span>Niko</span>
+              </div>
+          </div>
+          <div class="col">
+              <div *ngIf="isLogin()" class="col-logout">
+                  <svg  class="logout-icon" (click)="logout()" ></svg>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
