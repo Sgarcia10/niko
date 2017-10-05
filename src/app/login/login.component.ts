@@ -23,12 +23,12 @@ export class LoginComponent implements OnInit {
       private authenticationService: AuthenticationService,
       private alertService: AlertService)
   {
-        window.onresize = (e) =>
-        {
-            ngZone.run(() => {
-                this.height = window.innerHeight;
-            });
-        };
+        // window.onresize = (e) =>
+        // {
+        //     ngZone.run(() => {
+        //         this.height = window.innerHeight;
+        //     });
+        // };
   }
 
   ngOnInit() {

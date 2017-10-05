@@ -3,6 +3,7 @@ export class QuestionDetail {
         public _id: string,
         public title: string,
         public type: string,
+        public textArea : string,
         public options : Option [],
         public help : Message
     ){}
@@ -11,20 +12,22 @@ export class QuestionDetail {
 export class Option{
     constructor(
         public _id: string,
+        public selected : boolean,
         public text : string,
         public jump: number,
-        public textBox : boolean,
+        public isTextArea : boolean,
+        public textArea : string,
         public message : Message
     ){}
 }
 
 export class Message{
     constructor(
-        public _id : string,
         public title : string,
         public text : string,
         public downloadURL : DownloadURL,
-        public uploadURL : boolean,
+        public isUploadURL : boolean,
+        public uploadURL : string
     ){}
 }
 

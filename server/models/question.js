@@ -19,8 +19,12 @@ var message = new mongoose.Schema({
     required: true
   },
   downloadURL: downloadURL,
-  uploadURL: {
+  isUploadURL: {
     type: Boolean,
+    required: true
+  },
+  uploadURL: {
+    type: String,
     required: true
   }
 });
@@ -28,6 +32,10 @@ var message = new mongoose.Schema({
 var option = new mongoose.Schema({
   _id: {
     type : String,
+    required: true
+  },
+  selected : {
+    type: Boolean,
     required: true
   },
   text: {
@@ -38,9 +46,11 @@ var option = new mongoose.Schema({
     type: Number,
     required: true
   },
-  textBox: {
+  isTextArea: {
     type: Boolean,
-    required: true
+  },
+  textArea: {
+    type: String,
   },
   message: message
 });

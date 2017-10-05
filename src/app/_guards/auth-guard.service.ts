@@ -35,7 +35,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
         // console.log(url+"  "+roleCurrentUser);
         let u = String(url).valueOf();
         let r = String(roleCurrentUser).valueOf();
-        console.log(u+"  "+r);
         if (!(u===r)){
           this.router.navigate(['/not-found']);
           return false;

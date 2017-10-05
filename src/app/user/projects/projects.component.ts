@@ -1,4 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
+import { Router, ActivatedRoute} from '@angular/router';
+import { Answer } from '../../_models/index';
+import { AnswerService } from '../../_services/index';
+
 
 @Component({
   selector: 'app-projects',
@@ -110,7 +114,11 @@ private carreras = [
   private year ;
   private newProject : boolean = false;
   private height;
-  constructor(ngZone : NgZone) {
+  constructor(
+    private ngZone : NgZone,
+    private router: Router,
+    private route: ActivatedRoute,
+    private answerService : AnswerService) {
     window.onresize = (e) =>
     {
         ngZone.run(() => {
@@ -123,6 +131,13 @@ private carreras = [
     this.height = window.innerHeight;
     let year:number = new Date().getFullYear();
     this.year = year;
+    this.newProject = true;
+  }
+
+  private getMargin(){
+    if(this.height < 630)
+      return -10;
+    return this.height/2-370;
   }
 
   private firstTime(){
@@ -131,7 +146,13 @@ private carreras = [
 
   private createProject()
   {
-      this.newProject = true;
+      this.answerService.answer = new Answer('','',1,[],[]);
+      this.router.navigate(['./question'], { relativeTo: this.route });
+  }
+
+  private start()
+  {
+      this.newProject = false;
   }
 
 }

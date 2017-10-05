@@ -1,35 +1,17 @@
-.container-cover{
-  width: 100%;
-  padding: 0;
-  z-index: 0;
-  height: auto;
-}
 
-.full-container {
-	position: relative;
-  padding-top: 89px;
-	min-width: 100%;
-  height: auto;
+
+.container-cover {
 	background: url(../../../assets/bg-pattern.png),#466bb4;
 	background: url(../../../assets/bg-pattern.png),-webkit-linear-gradient(to left,#466bb4,#24ddcc);
-	background: url(../../../assets/bg-pattern.png),linear-gradient(to left,#466bb4,#24ddcc);
-	color: #fff;
+	background: url(../../../assets/bg-pattern.png),linear-gradient(to left,#2f58aa,#5175e3);
 }
 
-.container-question-full{
-  position: relative;
-  top:0; bottom: 0; left: 0; right: 0;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.container-question{
-  padding: 20px;
+.container-full{
+  width: 100%;
 }
 
 .question-title{
-  margin-top: 30px;
-  font-size: 30px;
+  font-size: 20px;
   line-height: 1.2;
   font-weight: bold;
   word-spacing: 1px;
@@ -42,6 +24,92 @@
 
 .respuesta-unica{
   min-width: 100%;
-  padding-left: 50px;
   text-align: left;
+}
+
+.text-area{
+	min-width: 100%;
+}
+
+.mover-btn{
+	min-width: 40px;
+	min-height: 40px;
+}
+
+.message-title{
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: bolder;
+  word-spacing: 1px;
+  font-family: 'Catamaran',sans-serif;
+}
+
+.message-text{
+  font-size: 17px;
+  text-align: justify;
+  text-justify: inter-word;
+  line-height: 1.4;
+  font-weight: bold;
+  font-family: 'Catamaran',sans-serif;
+}
+
+.result-title{
+  font-size: 22px;
+	margin-bottom: 15px;
+  line-height: 1.2;
+  font-weight: bolder;
+  word-spacing: 1px;
+  font-family: 'Catamaran',sans-serif;
+}
+
+.card-remark{
+	background-color: transparent;
+	border-color: white;
+	margin-top: 10px;
+}
+
+.header-remark{
+	background-color: rgba(238, 238, 238, 0.64);
+	color: rgb(20, 85, 138);
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.block-remark{
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.btn-xl {
+	color: #fff;
+	margin-top: 10px;
+	border: 1px solid;
+	border-radius: 300px;
+	padding: 15px 45px;
+	font-size: 14px;
+  transition: all 0.3s;
+}
+
+.btn-xl:hover {
+  transition: all 0.3s;
+  background-color: rgb(212, 131, 47);
+  font-weight: bolder;
+}
+
+@media screen and (min-width : 992px){
+}
+@media screen and (max-width : 992px){
+}
+@media screen and (max-width : 768px){
+}
+@media screen and (max-width : 576px){
+	.question-title{
+		font-size: 16px;
+	}
+	.message-title{
+		font-size: 16px;
+	}
+	.message-text{
+		font-size: 13px;
+	}
 }

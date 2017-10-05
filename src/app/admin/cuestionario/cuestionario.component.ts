@@ -1,6 +1,6 @@
 import 'rxjs/add/operator/switchMap';
 import { Component, OnInit, Inject } from '@angular/core';
-import { Category, Question } from '../../_models/index';
+import { Category, Question, QuestionDetail, Option, Message } from '../../_models/index';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { CategoryService, AuthenticationService, AlertService,
   DialogService, QuestionService } from '../../_services/index';

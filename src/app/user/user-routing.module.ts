@@ -19,7 +19,7 @@ const userRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: 'projects', component: ProjectsComponent },
-          { path: 'question', component: QuestionComponent },
+          { path: 'projects/question', component: QuestionComponent },
           { path: '', redirectTo:'projects' }
         ]
       }

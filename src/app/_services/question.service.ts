@@ -18,13 +18,21 @@ export class QuestionService {
         return this.http.get('api/admin/questions/' + _id).map((response: Response) => response.json());
     }
 
+    getByPos(pos: number) {
+        return this.http.get('api/admin/questions/pos/' + pos).map((response: Response) => response.json());
+    }
+
+    getAll() {
+        return this.http.get('api/admin/questions/').map((response: Response) => response.json());
+    }
+
     create(question: QuestionDetail) {
         return this.http.post('api/admin/questions/create', {question: this.question, questionDetail: question,
           idCategory: this.idCategory});
     }
 
     update(question: QuestionDetail) {
-        return this.http.put('api/admin/questions/' + question._id, question);
+        return this.http.put('api/admin/questions/update', question);
     }
 
     delete(question: Question) {

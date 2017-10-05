@@ -4,3 +4,4 @@ export * from './user.service';
 export * from './category.service';
 export * from './dialog.service';
 export * from './question.service';
+export * from './answer.service';

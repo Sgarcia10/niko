@@ -1,9 +1,9 @@
 <div class="container-cover" [style.min-height.px]="height" >
 <div *ngIf="firstTime()" class="container container-full" >
-    <div *ngIf="newProject" class="inicio" >
-        <a (click)="createProject()" class="btn btn-xl ">Crea tu primer proyecto</a>
+    <div *ngIf="newProject" class="inicio" [style.margin-top.px]="height/2-120">
+        <a (click)="start()" class="btn btn-xl ">Crea tu primer proyecto</a>
     </div>
-    <div *ngIf="!newProject" class="container-form" [style.margin-top.px]="height/2-370">
+    <div *ngIf="!newProject" class="container-form" [style.margin-top.px]="getMargin()">
         <div class="login-text">
             <h2>Tu proyecto:</h2>
         </div>

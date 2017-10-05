@@ -55,6 +55,7 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
   optionSelected : number = -1;
   helping : boolean = false;
   preguntaCategoria : Question;
+  update : boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,16 +69,18 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
     if(this.service.question && this.service.idCategory)
     {
       if(this.service.questionDetail){
-        console.log(this.service.questionDetail); 
+        this.pos = this.service.question.pos;
           this.pregunta = this.service.questionDetail;
+          this.update = true;
+          // this.arreglar();
         }
       else{
         this.pos = this.service.question.pos;
         let category : string = null;
         let id = 0;
-        let help = new Message ('','','',null,false);
+        let help = new Message ('','',null,false,"");
           this.pregunta = new QuestionDetail(
-            '', '', 'abierta', [], null
+            '', '', 'abierta', "", [], null
           );
       }
     }
@@ -86,16 +89,36 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  private arreglar(){
+    for(let i=0; i<this.pregunta.options.length; i++)
+    {
+      this.pregunta.options[i].isTextArea=false;
+      this.pregunta.options[i].textArea="";
+    }
+
+  }
+
   private save(){
 
     this.service.question.title = this.pregunta.title;
-    this.service.create(this.pregunta).subscribe(
-      data => {
-        this.router.navigate(['../'], { relativeTo: this.route });
-      },
-      err => {
-          this.alertService.error(err);
-      });
+    if(!this.update){
+      this.service.create(this.pregunta).subscribe(
+        data => {
+          this.router.navigate(['../'], { relativeTo: this.route });
+        },
+        err => {
+            this.alertService.error(err);
+        });
+      }
+      else{
+        this.service.update(this.pregunta).subscribe(
+          data => {
+            this.router.navigate(['../'], { relativeTo: this.route });
+          },
+          err => {
+              this.alertService.error(err);
+          });
+      }
   }
 
   private cancel(){
@@ -123,7 +146,7 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
       this.optionSelected = size;
       let pos : number = ('a'.charCodeAt(0))+size;
       let letra = String.fromCharCode(pos);
-      let option = new Option(letra,'',-1, false, null);
+      let option = new Option(letra,false,'',-1, false, null, null);
       this.pregunta.options.push(option);
   }
 
@@ -174,6 +197,24 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
       }
   }
 
+  private toggleTextArea(i)
+  {
+      if(this.pregunta.options[i].isTextArea)
+          this.pregunta.options[i].isTextArea=false;
+      else
+        this.pregunta.options[i].isTextArea=true;
+  }
+
+  private toggleUploadURL(j)
+  {
+      if(this.pregunta.options[j].message){
+        if(this.pregunta.options[j].message.isUploadURL)
+          this.pregunta.options[j].message.isUploadURL=false;
+        else
+          this.pregunta.options[j].message.isUploadURL=true;
+      }
+  }
+
   private toggleMessage(i){
      let msg = this.pregunta.options[i].message;
      if(msg)
@@ -181,7 +222,7 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
         this.pregunta.options[i].message=null;
      }
      else{
-       this.pregunta.options[i].message = new Message('','','', null, false);
+       this.pregunta.options[i].message = new Message('','', null, false, "");
      }
   }
   private toggleHelp(){
@@ -191,12 +232,12 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
         this.pregunta.help=null;
      }
      else{
-       this.pregunta.help = new Message('','','', null, false);
+       this.pregunta.help = new Message('','', null, false, "");
      }
   }
 
   private isMessage(i){
-      return (this.pregunta.options[i].message)?true:false;
+      return (!(this.pregunta.options[i].message===null))?true:false;
   }
 
   private isSelectedType(i)
@@ -204,9 +245,29 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
       return this.pregunta.type===this.types[i].type;
   }
 
+  private isTextBox(i)
+  {
+    // return (this.pregunta.options[i].textBox==="y")?true:false;
+  }
+  private isUploadOption(i){
+    if(this.isMessage(i))
+      return (this.pregunta.options[i].message.uploadURL==="y")?true:false;
+    else
+    return false;
+  }
+
   private esAbierta()
   {
       return this.pregunta.type===this.types[2].type;
+  }
+
+  private uploadDoc(i)
+  {
+      if(this.pregunta.options[i].message){
+        if(this.pregunta.options[i].message.uploadURL==="y")
+          this.pregunta.options[i].message.uploadURL="n";
+        else this.pregunta.options[i].message.uploadURL="y";
+      }
   }
 
   private esUnica()

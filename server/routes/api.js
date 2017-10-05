@@ -62,8 +62,10 @@ router.delete('/admin/categories/:_id', categoryService.delete);
 router.get('/admin/categories', categoryService.getAll);
 
 router.post('/admin/questions/create', questionService.create);
-router.put('/admin/questions/:_id', questionService.update);
+router.put('/admin/questions/update', questionService.update);
 router.post('/admin/questions/delete', questionService.delete);
+router.get('/admin/questions/', questionService.getAll);
 router.get('/admin/questions/:_id', questionService.getById);
+router.get('/admin/questions/pos/:pos', questionService.getByPos);
 
 module.exports = router;
