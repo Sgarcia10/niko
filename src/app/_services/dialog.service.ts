@@ -14,5 +14,5 @@ export class DialogService {
     return new Promise<boolean>(resolve => {
       return resolve(window.confirm(message || 'Is it OK?'));
     });
-  };
+  }
 }

@@ -1,16 +1,15 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/map';
 
-import { Question, QuestionDetail } from '../_models/index';
+import { QuestionBasic, Question } from '../_models/index';
 
 @Injectable()
 export class QuestionService {
 
-    public question : Question = null;
-    public idCategory : string = null;
-    public questionDetail : QuestionDetail = null;
+    private questionBasic: QuestionBasic = null;
+    private question: Question = null;
 
     constructor(private http: Http) { }
 
@@ -26,16 +25,31 @@ export class QuestionService {
         return this.http.get('api/admin/questions/').map((response: Response) => response.json());
     }
 
-    create(question: QuestionDetail) {
-        return this.http.post('api/admin/questions/create', {question: this.question, questionDetail: question,
-          idCategory: this.idCategory});
+    create() {
+        return this.http.post('api/admin/questions/create', {questionBasic: this.questionBasic, question: this.question});
     }
 
-    update(question: QuestionDetail) {
-        return this.http.put('api/admin/questions/update', question);
+    update() {
+        return this.http.put('api/admin/questions/update', this.question);
     }
 
-    delete(question: Question) {
-        return this.http.post('api/admin/questions/delete', question);
+    delete(id: string, pos: number) {
+        return this.http.delete('api/admin/questions/'+ id + ',' + pos );
+    }
+
+    setQuestionBasic(questionBasic: QuestionBasic){
+        this.questionBasic = questionBasic;
+    }
+
+    getQuestionBasic(){
+        return this.questionBasic;
+    }
+
+    setQuestion(question: Question){
+        this.question = question;
+    }
+
+    getQuestion(){
+        return this.question;
     }
 }

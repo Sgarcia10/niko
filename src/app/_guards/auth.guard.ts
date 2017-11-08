@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { AuthenticationService }      from '../_services/authentication.service';
+import { AuthenticationService } from '../_services/authentication.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -11,14 +11,11 @@ export class AuthGuard implements CanActivate {
 
         if ( localStorage.getItem('currentUser') ) {
           // logged in so return true
-          console.log("Inicio");
-            let roleCurrentUser = JSON.parse(localStorage.getItem('currentUser')).role;
+            const roleCurrentUser = JSON.parse(localStorage.getItem('currentUser')).role;
             this.authenticationService.verifyRole()
                 .subscribe(
                     role => {
-                        if ( role === roleCurrentUser)
-                          return true;
-
+                        if ( role === roleCurrentUser) return true;
                         this.router.navigate(['/']);
                         return false;
                     },
@@ -30,7 +27,7 @@ export class AuthGuard implements CanActivate {
         }
 
         // not logged in so redirect to login page with the return url
-        this.router.navigate(['']);
+        this.router.navigate(['./']);
         // this.router.navigate([''], { queryParams: { returnUrl: state.url }});
         return false;
     }

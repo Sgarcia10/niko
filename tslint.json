@@ -10,9 +10,10 @@
       true,
       "check-space"
     ],
-    "curly": true,
+    "curly": [true,
+      "ignore-same-line"],
     "eofline": true,
-    "forin": true,
+    "forin": false,
     "import-blacklist": [
       true,
       "rxjs"
@@ -69,17 +70,16 @@
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
-      true,
+      false,
       "check-open-brace",
       "check-catch",
       "check-else",
       "check-whitespace"
     ],
-    "prefer-const": true,
+    "prefer-const": false,
     "quotemark": [
       true,
       "single"
@@ -110,7 +110,6 @@
       true,
       "check-branch",
       "check-decl",
-      "check-operator",
       "check-separator",
       "check-type"
     ],

@@ -50,6 +50,7 @@
   margin-bottom: 10px;
   vertical-align: middle;
   min-height: 45px;
+  cursor: pointer;
 }
 
 .category-buttons{
@@ -247,4 +248,14 @@ input[type='text'] { font-size: 24px; color: white;}
   top: -0.5px;
   font-size: 22px;
   font-weight: 500;
+}
+
+.survey-name-text{
+    margin-left: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 0;
+    max-width: auto;
+    word-wrap: break-word;
+    text-align: left;
 }

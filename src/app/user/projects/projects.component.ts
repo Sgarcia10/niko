@@ -1,7 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-import { Answer } from '../../_models/index';
-import { AnswerService } from '../../_services/index';
+import { Answer, Project, Period, UserProject } from '../../_models/index';
+import { AnswerService, ProjectService, AlertService } from '../../_services/index';
+import { carreras } from './carreras';
 
 
 @Component({
@@ -11,114 +12,20 @@ import { AnswerService } from '../../_services/index';
 })
 export class ProjectsComponent implements OnInit {
 
-private carreras = [
-"ADMINISTRACION",
-"ANTROPOLOGIA",
-"ARQUITECTURA",
-"ARTE",
-"AUTOMATIZACION PROC. INDUST",
-"BIOLOGIA",
-"CIDER",
-"CIENCIA POLITICA",
-"CIENCIAS SOCIALES",
-"CONSTRUCCION DE SOFTWARE",
-"CONTADURIA INTERNACIONAL",
-"DECANATURA ESTUDIANTES",
-"DEPORTES",
-"DERECHO",
-"DERECHO COMERCIAL",
-"DIRECCION INTERNACIONALIZACION",
-"DISEÑO",
-"DOCTORADO EN ADMINISTRACION",
-"DOCTORADO EN DERECHO",
-"DOCTORADO EN LITERATURA",
-"ECONOMIA",
-"EDUCACION",
-"ESCUELA DE GOBIERNO",
-"ESP.DERE.MINERO ENERG DES SOST",
-"ESPEC.DERECHO DE LA EMPRESA",
-"ESPEC.DISEÑO GEST.SOC.TECNOL.",
-"ESPECIAL.DEREC.NEGOC.INTERNALE",
-"ESPECIALIZACION EN ECONOMIA",
-"ESTUDIOS INTERNALES",
-"FILOSOFIA",
-"FISICA",
-"GEOCIENCIAS",
-"GERENCIA EMPRESAS DE TELECOMUN",
-"GESTION PUBLICA",
-"HISTORIA",
-"HISTORIA DEL ARTE",
-"ING. ELECTRICA Y ELECTRONICA",
-"INGENIERIA BIOMEDICA",
-"INGENIERIA CIVIL Y AMBIENTAL",
-"INGENIERIA DE SISTEMAS",
-"INGENIERIA GENERAL",
-"INGENIERIA INDUSTRIAL",
-"INGENIERIA MECANICA",
-"INGENIERIA QUIMICA",
-"LEGISLACION FINANCIERA",
-"LENGUAS Y CULTURA",
-"LITERATURA",
-"MAES.EN DER.PUBLICO GEST.ADMIN",
-"MAEST EN GERENCIA AMBIENTAL TP",
-"MAEST GER AMB. Y PRAC. DRLLO.",
-"MAEST.BIOLOGIA COMPUTACIONAL",
-"MAEST.DERE.GOB.Y GEST.JUSTICIA",
-"MAEST.DISEÑO PROCES.Y PRODUCT.",
-"MAEST.EN ARQUITECTURAS DE TI",
-"MAEST.GERENC Y PRACT.DESARROLL",
-"MAEST.HUMANIDADES DIGITALES",
-"MAEST.INGENIER.DE INFORMACION",
-"MAEST.INGENIERIA DE PETROLEOS",
-"MAEST.INTELIG.ANALIT.TOMA DECI",
-"MAEST.PEDAGOG.LENGUAS EXTRANJ.",
-"MAEST.PSICOLOG.CLINICA Y SALUD",
-"MAESTR.EN INVESTIG.EN ADMON",
-"MAESTRIA DERECHO INTERNAL",
-"MAESTRIA EDUCACION MATEMATICA",
-"MAESTRIA EN ADMINISTRACION",
-"MAESTRIA EN CONTRUCCION DE PAZ",
-"MAESTRIA EN DERECHO",
-"MAESTRIA EN DERECHO PRIVADO",
-"MAESTRIA EN DISEÑO",
-"MAESTRIA EN ECONOMIA APLICADA",
-"MAESTRIA EN EDUCACION - IBAGUE",
-"MAESTRIA EN ESTUD.CULTURALES",
-"MAESTRIA EN FINANZAS",
-"MAESTRIA EN GEOGRAFIA",
-"MAESTRIA EN HISTORIA DEL ARTE",
-"MAESTRIA EN LITERATURA",
-"MAESTRIA EN MERCADEO",
-"MAESTRIA EN PERIODISMO",
-"MAESTRIA EN TRIBUTACION",
-"MAESTRIA PROPIEDAD INTELECTUAL",
-"MAESTR.INGENIERIA DE SOFTWARE",
-"MAESTR.SEGURIDAD INFORMACION",
-"MAESTR.TECNOLOG.INFORMAC.NEGOC",
-"MATEMATICAS",
-"MBA EJECUTIVO",
-"MEDICINA",
-"MICROBIOLOGIA",
-"MUSICA",
-"PERIODISMO",
-"POSTGRADO CIENCIAS BIOLOGICAS",
-"POSTGR.SALUD PUBLICA",
-"PSICOLOGIA",
-"QUIMICA",
-"REGIMEN JURID.FINAN.CONT.IMP.",
-"SIST.CONTROL ORGANIZ.Y GEST",
-"SISTEMAS DE INFORMACION - ESIO",
-"SISTEMAS DE TRANSMISION",
-"SOCIOLOGIA"]
-
+  private carreras = carreras;
   private year ;
-  private newProject : boolean = false;
-  private height;
+  private newProject: boolean;
+  private height: number;
+  private currentProject: Project;
+  private currentUser: UserProject;
+  private projects: Project[] = [];
   constructor(
-    private ngZone : NgZone,
+    private ngZone: NgZone,
     private router: Router,
     private route: ActivatedRoute,
-    private answerService : AnswerService) {
+    private answerService: AnswerService,
+    private projectService: ProjectService,
+    private alertService: AlertService) {
     window.onresize = (e) =>
     {
         ngZone.run(() => {
@@ -128,31 +35,65 @@ private carreras = [
   }
 
   ngOnInit() {
+
     this.height = window.innerHeight;
-    let year:number = new Date().getFullYear();
+    window.scrollTo(0, 0);
+    let year: number = new Date().getFullYear();
     this.year = year;
     this.newProject = true;
+    this.projects = [];
+    let u = JSON.parse(localStorage.getItem('currentUser'));
+    this.currentUser = new UserProject(u._id, u.username, u.code);
+    this.projectService.currentProject = null;
+    console.log(this.currentUser);
+    this.getProjects();
+
   }
 
   private getMargin(){
-    if(this.height < 630)
-      return -10;
-    return this.height/2-370;
+    if (this.height < 630) return -10;
+    return (this.height / 2) - 370;
   }
 
   private firstTime(){
     return true;
   }
 
-  private createProject()
+  private getProjects()
   {
-      this.answerService.answer = new Answer('','',1,[],[]);
-      this.router.navigate(['./question'], { relativeTo: this.route });
+      this.projectService.getByUserId(this.currentUser.userId)
+      .subscribe(
+        data => {
+            if (!data) this.newProject = true;
+            else{
+              this.newProject = false;
+              this.projects = data;
+            }
+        },
+        err => {
+            this.alertService.error(err);
+        });
+  }
+
+  private saveProject()
+  {
+
+      this.projectService.create(this.currentProject).subscribe(
+        data => {
+            this.answerService.answer = new Answer('', data._id, 1, [], []);
+            this.router.navigate(['./question'], { relativeTo: this.route });
+        },
+        err => {
+            this.alertService.error(err);
+        });
   }
 
   private start()
   {
       this.newProject = false;
+      this.currentProject = new Project('', '', '', '', 'individual', '',
+        new Period(2018, 1), '', this.currentUser);
+      window.scrollTo(0, 0);
   }
 
 }

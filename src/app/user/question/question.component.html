@@ -1,28 +1,29 @@
 <div class="container-cover" [style.min-height.px]="height" >
 <div class="container container-full" >
 <div class="container container-question" #containerQuestion [style.margin-top.px]="getMargin()">
-    <div  *ngIf="init && !isShowMessage && !isShowResult" >
+    <div  *ngIf="available && !isShowMessage && !isShowResult" >
         <div class="row">
             <div class="col-lg col-md-12">
                 <div class="question-title">
                     <p>{{currentQuestion.title}}</p>
                 </div>
-                <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
+                <!-- <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
                     <div class="form-group">
                         <textarea class="form-control" name="name" rows="3"
                         [(ngModel)]="currentQuestion.textArea" name="textArea"></textarea>
                     </div>
-                </div>
+                </div> -->
                 <div *ngIf="!isAbierta()" class="respuesta-unica">
-                    <div *ngFor="let option of currentQuestion.options; let i = index">
+                    <div *ngFor="let option of optionsAnswered; let i = index">
                         <div class="row">
                             <div class="col form-check" >
                                 <label class="form-check-label">
-                                    <input [type]="tipoOpcion(i)" (click)="toggleSelect(i)" [checked]="option.selected"
+                                    <input [type]="tipoOpcion(i)" cheked="false"
+                                    (change)="(option.checked)?option.checked=false:option.checked=true"
                                     class="form-check-input" name="tipo">
                                     {{option.text}}
                                 </label>
-                                <textarea class="text-area" *ngIf="option.isTextArea" rows="4" [(ngModel)]="option.textArea">
+                                <textarea class="text-area" *ngIf="isTextArea(i) && option.checked" rows="4" [(ngModel)]="option.answer">
                                 </textarea>
                             </div>
                             <div *ngIf="option.help" class="col-1">

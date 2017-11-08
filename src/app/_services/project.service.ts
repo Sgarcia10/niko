@@ -3,12 +3,12 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import { Answer } from '../_models/index';
+import { Project} from '../_models/index';
 
 @Injectable()
-export class AnswerService {
+export class ProjectService {
 
-    public answer: Answer = null;
+    public currentProject: Project = null;
 
     constructor(private http: Http) { }
 
@@ -16,9 +16,13 @@ export class AnswerService {
         return this.http.get('api/admin/questions/' + _id).map((response: Response) => response.json());
     }
 
-    create() {
-        return this.http.post('api/user/answer/create', this.answer)
-          .map((response: Response) => response.json());
+    create(project: Project) {
+        return this.http.post('api/user/projects/create', project)
+        .map((response: Response) => response.json());
+    }
+
+    getByUserId(_id: string) {
+        return this.http.get('api/user/projects/' + _id).map((response: Response) => response.json());
     }
 
     // update(question: QuestionDetail) {

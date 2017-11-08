@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from "../_services/index";
+import { AuthenticationService } from '../_services/index';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class NavbarComponent implements OnInit {
 
   constructor(
-    private authService : AuthenticationService,
+    private authService: AuthenticationService,
     private router: Router
   ) { }
 
@@ -19,8 +19,7 @@ export class NavbarComponent implements OnInit {
 
   private isLogin()
   {
-    if(localStorage.getItem('currentUser'))
-      return true;
+    if (localStorage.getItem('currentUser')) return true;
     return false;
   }
 
@@ -30,8 +29,7 @@ export class NavbarComponent implements OnInit {
       let roleCurrentUser = JSON.parse(localStorage.getItem('currentUser')).role;
       this.router.navigate([`/${roleCurrentUser}`]);
     }
-    else
-      this.router.navigate(['']);
+    else this.router.navigate(['']);
   }
 
   private logout()

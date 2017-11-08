@@ -4,21 +4,37 @@
         <a (click)="start()" class="btn btn-xl ">Crea tu primer proyecto</a>
     </div>
     <div *ngIf="!newProject" class="container-form" [style.margin-top.px]="getMargin()">
+          <div class="titulo-lista">
+              <h2>Tus proyectos:</h2>
+          </div>
+          <div class="row card-header" *ngFor="let project of projects">
+              <div class="col-11 project-name">
+                {{project.title}}
+              </div>
+              <div class="col-1 project-delete">
+                  <i class="fa fa-trash-o fa-3x delete-button" aria-hidden="true"></i>
+              </div>
+          </div>
+    </div>
+    <div *ngIf="false" class="container-form" [style.margin-top.px]="getMargin()">
         <div class="login-text">
-            <h2>Tu proyecto:</h2>
+            <h2>Tu nuevo proyecto:</h2>
         </div>
         <form  name="form" class="form-login"   novalidate>
             <div class="form-group">
                 <textarea class="form-control text-titulo" id="exampleTextarea"
+                [(ngModel)] = "currentProject.title" name="title"
                 rows="4" placeholder="Titulo de tu proyecto"></textarea>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control input-text" name="username"
-                placeholder="Nombre del asesor" required />
+                <input type="text" class="form-control input-text"
+                [(ngModel)] = "currentProject.adviser" name="adviser"
+                placeholder="Nombre del asesor" />
             </div>
             <div class="form-group">
-                <input type="text" class="form-control input-text" name="password"
-                placeholder="Nombre del curso" required />
+                <input type="text" class="form-control input-text"
+                [(ngModel)] = "currentProject.subject" name="subject"
+                placeholder="Nombre del curso" />
             </div>
             <div class="form-group">
                 <div class="row">
@@ -26,16 +42,18 @@
                       <label class="col-form-label text-periodo">Actividad:</label>
                     </div>
                     <div class="col">
-                        <select class="form-control select-program" required >
-                            <option value="" class="select-option" selected >Individual</option>
-                            <option value="" class="select-option"  >Grupal</option>
+                        <select class="form-control select-program"
+                        [(ngModel)] = "currentProject.activity" name="activity">
+                            <option value="individual" class="select-option" selected >Individual</option>
+                            <option value="grupal" class="select-option"  >Grupal</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control input-text" name="password"
-                placeholder="Tipo de proyecto" required />
+                <input type="text" class="form-control input-text"
+                [(ngModel)] = "currentProject.type" name="type"
+                placeholder="Tipo de proyecto"  />
                 <popover-content #myPopover
                     class = "help-popover"
                     placement="left"
@@ -58,15 +76,18 @@
                   </div>
                   <div class="col col-year">
                   <input type="number" class="form-control input-year" size="4" min="1990"
-                  [max]="this.year" step="1" [value]="year" />
+                  [max]="this.year" step="1"
+                  [(ngModel)] = "currentProject.period.year" name="year" />
                   </div><div class="col">
                   <input type="number" class="form-control input-periodo" size="1"
-                  min="1990" max="3" step="1" value="1" />
+                  min="1990" max="3" step="1"
+                  [(ngModel)] = "currentProject.period.semester" name="semester" />
                   </div>
                 </div>
             </div>
             <div class="form-group">
-              <select class="form-control select-program" required >
+              <select class="form-control select-program"
+              [(ngModel)] = "currentProject.program" name="program" >
                 <option value="" disabled selected hidden>Escoge tu programa...</option>
                 <option class="select-option" *ngFor="let carrera of carreras"
                     [value]="carrera" >
@@ -76,7 +97,7 @@
               </select>
             </div>
             <div class="form-group" style="text-align: center;">
-                <a (click)="createProject()" class="btn btn-xl ">Empezar</a>
+                <a (click)="saveProject()" class="btn btn-xl ">Empezar</a>
 
             </div>
         </form>

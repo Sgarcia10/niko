@@ -2,15 +2,17 @@
     constructor(
         public _id: string,
         public name: string,
-        public pos: Number,
-        public questions: Question[]
+        public pos: number,
+        public questions: QuestionBasic[],
+        public idSurvey: string
     ){}
 }
 
-export class Question {
+export class QuestionBasic {
     constructor(
         public idQuestion: string,
         public pos: number,
-        public title : string
+        public title: string,
+        public idCategory: string
     ){}
 }

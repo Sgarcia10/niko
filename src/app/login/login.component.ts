@@ -10,14 +10,14 @@ import { AlertService, AuthenticationService } from '../_services/index';
 })
 export class LoginComponent implements OnInit {
 
-  model: any = {};
-  loading = false;
-  returnUrl: string;
-  height;
-  isLogin : boolean = false;
+  private model: any = {};
+  private loading = false;
+  private returnUrl: string;
+  private height: number;
+  private isLogin: boolean;
 
   constructor(
-      private ngZone:NgZone,
+      private ngZone: NgZone,
       private route: ActivatedRoute,
       private router: Router,
       private authenticationService: AuthenticationService,
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
       this.authenticationService.login(this.model.username, this.model.password)
           .subscribe(
               user => {
-                  this.isLogin = true
+                  this.isLogin = true;
                   this.router.navigate([`/${user.role}`]);
                   this.loading = false;
               },

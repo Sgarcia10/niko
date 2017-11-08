@@ -1,7 +1,7 @@
 <div class="container">
 
     <div class="overlay" *ngIf="editable"></div>
-    <!-- <div *ngFor="let option of pregunta.options">
+    <!-- <div *ngFor="let option of currentQuestion.options">
       <div> {{option._id}}.{{option.text}}   {{option.jump}}   {{option.textBox}} </div>
       <div *ngIf="option.message">
           {{option.message.title}}   {{option.message.text}}   {{option.message.uploadURL}}</div>
@@ -14,8 +14,8 @@
             <div class="card-block">
                 <div class="form-group">
                     <textarea class="form-control" id="title" rows="2"
-                      [(ngModel)]="pregunta.title" name="title" #title="ngModel"
-                      placeholder="¿Pregunta?" required></textarea>
+                      [(ngModel)]="currentQuestion.title" name="title" #title="ngModel"
+                      placeholder="Pregunta?" required></textarea>
                     <div *ngIf="title.errors "
                         class="alert alert-danger">
                        <div [hidden]="!title.errors.required">
@@ -29,14 +29,16 @@
             <div class="card-header">
                 <div class="form-group row">
                     <label class="col-sm-3">Tipo de Respuesta:</label>
-                    <div class="col-sm-3" *ngFor="let type of types; let i = index">
-                        <div class="form-check">
-                            <label class="form-check-label">
-                              <input type="radio" class="form-check-input" name="tipo"
-                                id="'type'+i" value="{{type.type}}" [checked]="isSelectedType(i)"
-                                [(ngModel)]="pregunta.type">
-                                  {{type.text}}
-                            </label>
+                    <div class="col-sm-9 row">
+                        <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let type of types; let i = index">
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                  <input type="radio" class="form-check-input" name="tipo"
+                                    id="'type'+i" value="{{type.type}}" [checked]="isSelectedType(i)"
+                                    [(ngModel)]="currentQuestion.type">
+                                      {{type.text}}
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -49,10 +51,26 @@
                         </label>
                     </div>
                 </div>
+                <div class="form-group row divider">
+                    <div class="form-check col ">
+                        <label class="form-check-label">
+                          URL Video:
+                          <input type="text" class="form-check-input" [(ngModel)]="currentQuestion.videoURL"
+                          name="videoURL">
+                        </label>
+                    </div>
+                    <div class="form-check col ">
+                        <label class="form-check-label">
+                          URL Image:
+                          <input type="text" class="form-check-input" [(ngModel)]="currentQuestion.imageURL"
+                          name="imageURL">
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
-        <div *ngIf="!esAbierta()" class="container-options">
-            <div class="card" *ngFor="let option of pregunta.options; let j = index">
+        <div *ngIf="esUnica() || esMultiple()" class="container-options">
+            <div class="card" *ngFor="let option of currentQuestion.options; let j = index">
                 <div *ngIf="isOptionEditable(j)" class="card-header" style="z-index:2;">
                     <div class="row" >
                         <div class="col-sm-1 btn-option">
@@ -114,11 +132,11 @@
                     </div>
                 </div>
                 <div class="card-block-option">
-                    <div class="form-group row" style="text-align=left;">
-                        <div class="form-check col-sm-4" style="text-align=left;">
+                    <div class="form-group row" >
+                        <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" [checked]="option.jump>0" (click)="toggleJump(j)"
-                                   type="checkbox"> Saltar numero de preguntas:
+                                   type="checkbox"> Saltar numero de currentQuestions:
                             </label>
                         </div>
                         <div *ngIf="option.jump>0" class="col-4 col-sm-2">
@@ -132,7 +150,7 @@
                                 <input class="form-check-input" type="checkbox"
                                   name="'textBox'+j" [checked]="option.isTextArea"
                                   (click)="toggleTextArea(j)">
-                                  Agregar cuadro de texto
+                                  Agregar respuesta abierta
                             </label>
                         </div>
                     </div>
@@ -148,12 +166,12 @@
                         <div class="form-group">
                             <label for="titleMessage">Titulo</label>
                             <input type="text" class="form-control" name="'titleMessage'+j"
-                            [(ngModel)]="option.message.title" placeholder="Titulo">
+                            value="{{option.message.title}}" placeholder="Titulo">
                         </div>
                         <div class="form-group">
                             <label for="textMessage">Mensaje:</label>
                             <textarea class="form-control" rows="3" name="'textMessage'+j"
-                              [(ngModel)]="option.message.text"></textarea>
+                              > {{option.message.text}} </textarea>
                         </div>
                         <div class="row row-download">
                                 <button  *ngIf="!option.message.downloadURL" class="btn btn-primary col"
@@ -182,25 +200,25 @@
                 </a>
             </div>
         </div>
-        <div *ngIf="pregunta.help">
+        <div *ngIf="currentQuestion.help">
             <div class="card card-message card-block">
                 <div class="form-group">
                     <label for="titleMessage">Titulo de ayuda:</label>
                     <input type="text" class="form-control" name="helpTitle"
-                    [(ngModel)]="pregunta.help.title" placeholder="Titulo">
+                    [(ngModel)]="currentQuestion.help.title" placeholder="Titulo">
                 </div>
                 <div class="form-group">
                     <label for="textMessage">Mensaje de ayuda:</label>
                     <textarea class="form-control" rows="3" name="helpText"
-                      [(ngModel)]="pregunta.help.text"></textarea>
+                      [(ngModel)]="currentQuestion.help.text"></textarea>
                 </div>
                 <div class="row row-download">
-                        <button  *ngIf="!pregunta.help.downloadURL" class="btn btn-primary"
+                        <button  *ngIf="!currentQuestion.help.downloadURL" class="btn btn-primary"
                         type="button" (click)="helpDownloadURL(j)">Agregar Archivo</button>
-                        <div *ngIf="pregunta.help.downloadURL" class="form-group col-sm-12">
+                        <div *ngIf="currentQuestion.help.downloadURL" class="form-group col-sm-12">
                             <label for="nameDownload">Nombre del archivo</label>
                             <input  type="text" class="form-control" name="textHelpUploadURL"
-                            [(ngModel)]="pregunta.help.name" placeholder="Nombre del archivo">
+                            [(ngModel)]="currentQuestion.help.name" placeholder="Nombre del archivo">
                         </div>
                 </div>
             </div>

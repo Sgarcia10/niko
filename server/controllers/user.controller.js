@@ -18,7 +18,9 @@ exports.authenticate = function(username, password){
     					expiresIn: 86400*2 // expires in 24 hours
     				});
             var authUser = new AuthUser({
-              name: user.name,
+              _id : user._id,
+              username: user.username,
+              code: user.code,
               role: user.role,
               jwt: token
             });

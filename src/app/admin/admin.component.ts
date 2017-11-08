@@ -8,7 +8,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 export class AdminComponent implements OnInit {
 
   height;
-  constructor(ngZone:NgZone) {
+  constructor(ngZone: NgZone) {
     window.onresize = (e) =>
     {
         ngZone.run(() => {

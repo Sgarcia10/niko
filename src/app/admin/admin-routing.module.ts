@@ -3,10 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { CuestionarioComponent } from './cuestionario/cuestionario.component';
+import { SurveyComponent } from './survey/survey.component';
 import { QuestionComponent } from './question/question.component';
 
-import { AuthGuard }from '../_guards/auth-guard.service';
+import { AuthGuard } from '../_guards/auth-guard.service';
 
 const adminRoutes: Routes = [
   {
@@ -18,9 +18,9 @@ const adminRoutes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'cuestionario', component: CuestionarioComponent },
-          { path: 'cuestionario/question', component: QuestionComponent },
-          { path: '', redirectTo:'cuestionario' }
+          { path: 'survey', component: SurveyComponent },
+          { path: 'survey/question/:idSurvey', component: QuestionComponent },
+          { path: '', redirectTo: 'survey' }
         ]
       }
     ]

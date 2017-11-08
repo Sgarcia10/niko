@@ -11,12 +11,8 @@ export class CategoryService {
 
     constructor(private http: Http) { }
 
-    getAll() {
-        return this.http.get('api/admin/categories').map((response: Response) => response.json());
-    }
-
-    getById(_id: string) {
-        return this.http.get('api/admin/categories/' + _id).map((response: Response) => response.json());
+    getBySurveyId(surveyId) {
+        return this.http.get('api/admin/categories/' + surveyId).map((response: Response) => response.json());
     }
 
     create(category: Category) {

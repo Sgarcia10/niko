@@ -5,3 +5,5 @@ export * from './category.service';
 export * from './dialog.service';
 export * from './question.service';
 export * from './answer.service';
+export * from './project.service';
+export * from './survey.service';

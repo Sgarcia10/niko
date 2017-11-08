@@ -15,8 +15,8 @@ exports.update = function(id, category){
     return  Category.findByIdAndUpdate(id, category).exec();
 }
 
-exports.getAll = function(){
-    return Category.find().lean().exec();
+exports.getBySurveyId = function(id){
+    return Category.find({idSurvey: id}).lean().exec();
 }
 
 exports.delete = function(id)

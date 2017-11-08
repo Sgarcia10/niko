@@ -1,37 +1,28 @@
-export class QuestionDetail {
+export class Project {
     constructor(
         public _id: string,
         public title: string,
+        public adviser: string,
+        public subject: string,
+        public activity: string,
         public type: string,
-        public options : Option [],
-        public help : Message
+        public period: Period,
+        public program: string,
+        public user: UserProject
     ){}
 }
 
-export class Option{
+export class Period {
     constructor(
-        public _id: string,
-        public text : string,
-        public jump: number,
-        public textBox : boolean,
-        public message : Message
+        public year: number,
+        public semester: number
     ){}
 }
 
-export class Message{
+export class UserProject {
     constructor(
-        public _id : string,
-        public title : string,
-        public text : string,
-        public downloadURL : DownloadURL,
-        public uploadURL : boolean,
-    ){}
-}
-
-
-export class DownloadURL{
-    constructor(
-        public name : string,
-        public url : string
+        public userId: string,
+        public username: string,
+        public code: string
     ){}
 }

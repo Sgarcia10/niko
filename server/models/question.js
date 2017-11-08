@@ -19,23 +19,11 @@ var message = new mongoose.Schema({
     required: true
   },
   downloadURL: downloadURL,
-  isUploadURL: {
-    type: Boolean,
-    required: true
-  },
-  uploadURL: {
-    type: String,
-    required: true
-  }
 });
 
 var option = new mongoose.Schema({
   _id: {
     type : String,
-    required: true
-  },
-  selected : {
-    type: Boolean,
     required: true
   },
   text: {
@@ -48,9 +36,8 @@ var option = new mongoose.Schema({
   },
   isTextArea: {
     type: Boolean,
-  },
-  textArea: {
-    type: String,
+    required: true,
+    default: false,
   },
   message: message
 });
@@ -66,7 +53,17 @@ var questionSchema = new mongoose.Schema({
     required: true
   },
   options : [option],
-  help : message
+  help : message,
+  videoURL : {
+    type : String,
+  },
+  imageURL : {
+    type : String,
+  },
+  idSurvey : {
+    type : String,
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Question', questionSchema);

@@ -6,7 +6,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { QuestionComponent } from './question/question.component';
 
 
-import { AuthGuard }from '../_guards/auth-guard.service';
+import { AuthGuard } from '../_guards/auth-guard.service';
 
 const userRoutes: Routes = [
   {
@@ -20,7 +20,7 @@ const userRoutes: Routes = [
         children: [
           { path: 'projects', component: ProjectsComponent },
           { path: 'projects/question', component: QuestionComponent },
-          { path: '', redirectTo:'projects' }
+          { path: '', redirectTo: 'projects' }
         ]
       }
     ]

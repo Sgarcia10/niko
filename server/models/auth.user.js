@@ -1,7 +1,15 @@
 var mongoose = require( 'mongoose' );
 
 var authUserSchema = new mongoose.Schema({
-  name: {
+  _id: {
+    type: String,
+    required: true
+  },
+  username: {
+    type: String,
+    required: true
+  },
+  code: {
     type: String,
     required: true
   },

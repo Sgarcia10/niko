@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewChecked, ViewChild  } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Question, QuestionDetail, Option, Message, DownloadURL} from '../../_models/index';
+import { Location } from '@angular/common';
+import { Question, QuestionBasic, Option, Message, DownloadURL} from '../../_models/index';
 import { QuestionService, AlertService, DialogService } from '../../_services/index';
+import { types } from '../../_data/questionTypes';
 
 declare const filestack: {
   init(apiKey: string): {
@@ -18,9 +20,9 @@ declare const filestack: {
 })
 export class QuestionComponent implements OnInit, AfterViewChecked {
 
-  uploadedFileUrls: string[] = [];
+  private uploadedFileUrls: string[] = [];
   // question :
-  isNew : boolean = false;
+  private isNew: boolean;
 
   questionForm: NgForm;
   @ViewChild('questionForm') currentForm: NgForm;
@@ -44,90 +46,91 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
     }
   };
 
-  pregunta : QuestionDetail;
-  pos : number = 0;
-  types : Array<any> = [
-    {'type':'unica', 'text':'Unica'},
-    {'type':'multiple', 'text':'Multiple'},
-    {'type':'abierta', 'text':'Abierta'}];
-  editable : boolean = false;
-  newOption : boolean = false;
-  optionSelected : number = -1;
-  helping : boolean = false;
-  preguntaCategoria : Question;
-  update : boolean = false;
+  private currentQuestion: Question;
+  private pos: number;
+  private types;
+  private editable: boolean;
+  private newOption: boolean;
+  private optionSelected: number;
+  private helping: boolean;
+  private currentQuestionCategoria: Question;
+  private update: boolean;
+  private idSurvey: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private service: QuestionService,
-    private alertService : AlertService,
-    private dialogService : DialogService
+    private alertService: AlertService,
+    private dialogService: DialogService
   ) { }
 
   ngOnInit() {
-    if(this.service.question && this.service.idCategory)
+    this.idSurvey = this.route.snapshot.paramMap.get('idSurvey');
+    this.pos = 0;
+    this.types = types;
+    this.editable = false;
+    this.newOption = false;
+    this.optionSelected = -1;
+    this.helping = false;
+    this.update = false;
+    const questionBasic: QuestionBasic = this.service.getQuestionBasic();
+    if (questionBasic)
     {
-      if(this.service.questionDetail){
-        this.pos = this.service.question.pos;
-          this.pregunta = this.service.questionDetail;
-          this.update = true;
-          // this.arreglar();
-        }
-      else{
-        this.pos = this.service.question.pos;
-        let category : string = null;
-        let id = 0;
-        let help = new Message ('','',null,false,"");
-          this.pregunta = new QuestionDetail(
-            '', '', 'abierta', "", [], null
+      this.pos = questionBasic.pos;
+      if (this.service.getQuestion()){
+        this.currentQuestion = this.service.getQuestion();
+        this.update = true;
+      }
+      else
+      {
+        const category: string = null;
+        const id = 0;
+        const help = new Message ('', '', null);
+          this.currentQuestion = new Question(
+            '', this.idSurvey, '', 'abierta', [], null, '', ''
           );
       }
     }
-    else{
-      this.router.navigate(['../'], { relativeTo: this.route });
-    }
-  }
-
-  private arreglar(){
-    for(let i=0; i<this.pregunta.options.length; i++)
-    {
-      this.pregunta.options[i].isTextArea=false;
-      this.pregunta.options[i].textArea="";
-    }
-
+    else this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private save(){
 
-    this.service.question.title = this.pregunta.title;
-    if(!this.update){
-      this.service.create(this.pregunta).subscribe(
+    if (this.currentQuestion.type === this.types[2].type || this.currentQuestion.type === this.types[3].type){
+      this.currentQuestion.options = [];
+    }
+    this.service.setQuestion(this.currentQuestion);
+    const questionBasic: QuestionBasic = this.service.getQuestionBasic();
+    questionBasic.title = this.currentQuestion.title;
+    this.service.setQuestionBasic(questionBasic);
+    if (!this.update){
+      this.service.create().subscribe(
         data => {
-          this.router.navigate(['../'], { relativeTo: this.route });
+          this.location.back();
         },
         err => {
             this.alertService.error(err);
         });
       }
-      else{
-        this.service.update(this.pregunta).subscribe(
+    else{
+        this.service.update().subscribe(
           data => {
             this.router.navigate(['../'], { relativeTo: this.route });
           },
           err => {
               this.alertService.error(err);
           });
-      }
+    }
   }
 
   private cancel(){
     this.dialogService.confirm('Esta seguro de cancelar?')
-      .then(res =>{
-        if(res){
-          this.service.question = null;
-          this.service.idCategory = null;
-          this.router.navigate(['../'], { relativeTo: this.route });
+      .then(res => {
+        if (res){
+          this.service.setQuestionBasic(null);
+          this.location.back();
         }
       });
   }
@@ -135,19 +138,19 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
   private deleteOption(j)
   {
       this.decreaseOptionsId(j);
-      this.pregunta.options.splice(j,1);
+      this.currentQuestion.options.splice(j, 1);
   }
 
   private addOption()
   {
-      let size =this.pregunta.options.length;
+      const size = this.currentQuestion.options.length;
       this.editable = true;
       this.newOption = true;
       this.optionSelected = size;
-      let pos : number = ('a'.charCodeAt(0))+size;
-      let letra = String.fromCharCode(pos);
-      let option = new Option(letra,false,'',-1, false, null, null);
-      this.pregunta.options.push(option);
+      const pos: number = ('a'.charCodeAt(0)) + size;
+      const letra = String.fromCharCode(pos);
+      const option = new Option(letra, '', -1, false, null);
+      this.currentQuestion.options.push(option);
   }
 
   private editOption(i)
@@ -167,137 +170,147 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
   {
       this.optionSelected = -1;
       this.editable = false;
-      if(this.newOption)
+      if (this.newOption)
       {
         this.decreaseOptionsId(i);
-        this.pregunta.options.splice(i,1);
+        this.currentQuestion.options.splice(i, 1);
       }
   }
 
   private decreaseOptionsId(id)
   {
-    for (let _i = id+1; _i < this.pregunta.options.length; _i++) {
-      let pos : number = ('a'.charCodeAt(0))+(_i-1);
-      let letra = String.fromCharCode(pos);
-      this.pregunta.options[_i]._id=letra;
+    for (let _i = id + 1; _i < this.currentQuestion.options.length; _i++) {
+      const pos: number = ('a'.charCodeAt(0)) + ( _i - 1 );
+      const letra = String.fromCharCode(pos);
+      this.currentQuestion.options[_i]._id = letra;
     }
   }
 
   private isOptionEditable(i)
   {
-     return this.optionSelected===i;
+     return this.optionSelected === i;
   }
 
   private toggleJump(i){
-      if(this.pregunta.options[i].jump <0){
-          this.pregunta.options[i].jump = 1;
+      if (this.currentQuestion.options[i].jump < 0){
+          this.currentQuestion.options[i].jump = 1;
       }
       else{
-          this.pregunta.options[i].jump = -1;
-      }
+          this.currentQuestion.options[i].jump = -1;
+        }
   }
 
-  private toggleTextArea(i)
-  {
-      if(this.pregunta.options[i].isTextArea)
-          this.pregunta.options[i].isTextArea=false;
-      else
-        this.pregunta.options[i].isTextArea=true;
-  }
+  // private toggleTextArea(i)
+  // {
+  //     if(this.currentQuestion.options[i].isTextArea)
+  //         this.currentQuestion.options[i].isTextArea=false;
+  //     else
+  //       this.currentQuestion.options[i].isTextArea=true;
+  // }
 
-  private toggleUploadURL(j)
-  {
-      if(this.pregunta.options[j].message){
-        if(this.pregunta.options[j].message.isUploadURL)
-          this.pregunta.options[j].message.isUploadURL=false;
-        else
-          this.pregunta.options[j].message.isUploadURL=true;
-      }
-  }
+  // private toggleUploadURL(j)
+  // {
+  //     if(this.currentQuestion.options[j].message){
+  //       if(this.currentQuestion.options[j].message.isUploadURL)
+  //         this.currentQuestion.options[j].message.isUploadURL=false;
+  //       else
+  //         this.currentQuestion.options[j].message.isUploadURL=true;
+  //     }
+  // }
 
   private toggleMessage(i){
-     let msg = this.pregunta.options[i].message;
-     if(msg)
-     {
-        this.pregunta.options[i].message=null;
-     }
+     const msg = this.currentQuestion.options[i].message;
+     if (msg){
+        this.currentQuestion.options[i].message = null;
+    }
      else{
-       this.pregunta.options[i].message = new Message('','', null, false, "");
+       this.currentQuestion.options[i].message = new Message('', '', null);
      }
   }
   private toggleHelp(){
-     let msg = this.pregunta.help;
-     if(msg)
-     {
-        this.pregunta.help=null;
-     }
+     const msg = this.currentQuestion.help;
+     if (msg){
+        this.currentQuestion.help = null;
+      }
      else{
-       this.pregunta.help = new Message('','', null, false, "");
+       this.currentQuestion.help = new Message('', '', null);
      }
   }
 
   private isMessage(i){
-      return (!(this.pregunta.options[i].message===null))?true:false;
+      return (!(this.currentQuestion.options[i].message === null)) ? true : false;
+  }
+
+  private getMessageTitle(i){
+      return this.currentQuestion.options[i].message.title;
+  }
+
+  private getMessageText(i){
+      return this.currentQuestion.options[i].message.text;
   }
 
   private isSelectedType(i)
   {
-      return this.pregunta.type===this.types[i].type;
+      return this.currentQuestion.type === this.types[i].type;
   }
 
   private isTextBox(i)
   {
-    // return (this.pregunta.options[i].textBox==="y")?true:false;
+    // return (this.currentQuestion.options[i].textBox==="y")?true:false;
   }
-  private isUploadOption(i){
-    if(this.isMessage(i))
-      return (this.pregunta.options[i].message.uploadURL==="y")?true:false;
-    else
-    return false;
-  }
+  // private isUploadOption(i){
+  //   if(this.isMessage(i))
+  //     return (this.currentQuestion.options[i].message.uploadURL==="y")?true:false;
+  //   else
+  //   return false;
+  // }
+
+  // private uploadDoc(i)
+  // {
+  //     if(this.currentQuestion.options[i].message){
+  //       if(this.currentQuestion.options[i].message.uploadURL==="y")
+  //         this.currentQuestion.options[i].message.uploadURL="n";
+  //       else this.currentQuestion.options[i].message.uploadURL="y";
+  //     }
+  // }
+
 
   private esAbierta()
   {
-      return this.pregunta.type===this.types[2].type;
-  }
-
-  private uploadDoc(i)
-  {
-      if(this.pregunta.options[i].message){
-        if(this.pregunta.options[i].message.uploadURL==="y")
-          this.pregunta.options[i].message.uploadURL="n";
-        else this.pregunta.options[i].message.uploadURL="y";
-      }
+      return this.currentQuestion.type === this.types[2].type;
   }
 
   private esUnica()
   {
-      return this.pregunta.type===this.types[0].type;
+      return this.currentQuestion.type === this.types[0].type;
   }
 
   private esMultiple()
   {
-      return this.pregunta.type===this.types[1].type;
+      return this.currentQuestion.type === this.types[1].type;
+  }
+
+  private esCargar()
+  {
+      return this.currentQuestion.type === this.types[3].type;
   }
 
   private async downloadURL(i) {
     const client = filestack.init('AzQ6VeLs4QvmDxKFrY7N6z');
     const result = await client.pick({ maxFiles: 1 });
     const url = result.filesUploaded[0].url;
-    if(url)
-    {
-        this.pregunta.options[i].message.downloadURL = new DownloadURL(url,url);
-    }
+    if (url){
+        this.currentQuestion.options[i].message.downloadURL = new DownloadURL(url, url);
+      }
   }
 
   private async helpDownloadURL(i) {
     const client = filestack.init('AzQ6VeLs4QvmDxKFrY7N6z');
     const result = await client.pick({ maxFiles: 1 });
     const url = result.filesUploaded[0].url;
-    if(url)
-    {
-        this.pregunta.help.downloadURL = new DownloadURL(url,url);
-    }
+    if (url){
+        this.currentQuestion.help.downloadURL = new DownloadURL(url, url);
+      }
   }
 
   ngAfterViewChecked() {
@@ -305,17 +318,17 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
   }
 
   formChanged() {
-    if (this.currentForm === this.questionForm) { return; }
+    if (this.currentForm === this.questionForm) return;
     this.questionForm = this.currentForm;
-    if (this.questionForm) {
+    if (this.questionForm){
       this.questionForm.valueChanges
         .subscribe(data => this.onValueChanged(data));
-    }
+      }
   }
 
   onValueChanged(data?: any) {
-    if (!this.questionForm) { return; }
-    const form = this.questionForm.form;
+    if (!this.questionForm) return;
+      const form = this.questionForm.form;
 
     for (const field in this.formErrors) {
       // clear previous error message (if any)
@@ -324,7 +337,7 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
 
       if (control && control.dirty && !control.valid) {
         const messages = this.validationMessages[field];
-        for (const key in control.errors) {
+        for (const key in control.errors){
           this.formErrors[field] += messages[key] + ' ';
         }
       }

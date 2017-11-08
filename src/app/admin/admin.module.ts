@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule }  from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -9,9 +9,10 @@ import { CustomHttpProvider } from '../_helpers/custom-http';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-import { CuestionarioComponent } from './cuestionario/cuestionario.component';
+import { SurveyComponent } from './survey/survey.component';
 
-import { CategoryService, DialogService, QuestionService } from '../_services/index';
+import { CategoryService, DialogService, QuestionService,
+    SurveyService} from '../_services/index';
 import { QuestionComponent } from './question/question.component';
 
 @NgModule({
@@ -24,14 +25,15 @@ import { QuestionComponent } from './question/question.component';
     AdminComponent,
     DashboardComponent,
     ToolbarComponent,
-    CuestionarioComponent,
+    SurveyComponent,
     QuestionComponent
   ],
   providers: [
     CustomHttpProvider,
     DialogService,
     CategoryService,
-    QuestionService
+    QuestionService,
+    SurveyService
   ]
 })
 

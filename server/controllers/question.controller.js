@@ -10,11 +10,11 @@ var Category = require('../models/category');
 // var Message = require('../models/question');
 // var DownloadURL = require('../models/question');
 
-exports.create = function(questionBasic, question, idCategory){
+exports.create = function(questionBasic, question){
     var q = _.omit(question, ['_id', 'help._id', 'options.message._id']);
     var s = new Question(q);
     var idQuestion ;
-    var idCategory
+    var idCategory = questionBasic.idCategory;
     var deferred = Q.defer();
     var qB = questionBasic;
 
@@ -71,7 +71,15 @@ exports.update = function(question){
 }
 
 exports.getById = function(id){
-    return Question.findById(id).exec();
+    var deferred = Q.defer();
+    return Question.findById(id, (err, doc)=>{
+      if (doc){
+        deferred.resolve(doc);
+      }
+      if(err){
+         deferred.reject(err);
+     }
+    });
 }
 
 exports.getAll = function(){
@@ -95,21 +103,19 @@ exports.getByPos = function(pos){
   return deferred.promise;
 }
 
-exports.delete = function(question)
+exports.delete = function(id, pos)
 {
   var deferred = Q.defer();
-  var _id = String(question.idQuestion);
-  Category.update({}, {$pull: { "questions": {"idQuestion": _id }}, },{ multi: true },
+  Category.update({}, {$pull: { "questions": {"pos": pos }}, },{ multi: true },
     (err, docDel)=> {
     if(err) deferred.reject(err);
     else if(docDel) {
-      var pos = question.pos;
       Category.updateMany({"questions.pos":  {$gte:pos}}, {$inc: {"questions.$.pos" :-1}}, (err1, docs1)=>{
         if(err1) deferred.reject(err1);
         else if (docs1)
-          Question.findByIdAndRemove(_id, (err1, docs)=>{
+          Question.findByIdAndRemove(id, (err1, docs)=>{
             if(err1) deferred.reject(err1);
-            else if(docs) deferred.resolve(docDel);
+            else if(docs) deferred.resolve(docs);
             else deferred.reject("DB error");
           });
         else deferred.reject("Database error");

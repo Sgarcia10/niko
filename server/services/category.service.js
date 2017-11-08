@@ -14,8 +14,8 @@ exports.update = function(req, res){
       .catch(err => res.status(400).send('No se pudo actualizar: '+err));
 }
 
-exports.getAll = function(req, res){
-    categoryController.getAll()
+exports.getBySurveyId = function(req, res){
+    categoryController.getBySurveyId(req.params._id)
       .then(categories => res.send(categories))
       .catch(err => res.status(400).send('No se puede buscar: '+err));
 }
