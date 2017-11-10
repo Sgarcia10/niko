@@ -39,7 +39,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn category-button-edit category-button"
                                  (click)="edit(i)">Editar</button>
-                            <button type="button" class="btn category-button-delete category-button"
+                            <button *ngIf="!currentSurvey.finished" type="button" class="btn category-button-delete category-button"
                                   (click)="delete(i)">Eliminar</button>
                         </div>
                     </div>
@@ -56,14 +56,14 @@
                         <div class="col-11 col-sm-9 col-q" style="text-align:left;">
                             <div class="question-text" (click)="editQuestion(i,j)">{{question.title}}</div>
                         </div>
-                        <div class="col-6 col-sm-1 col-q">
+                        <div *ngIf="!currentSurvey.finished" class="col-6 col-sm-1 col-q">
                             <div class="col-questions">
                                 <a (click)="editQuestion(i,j)" class="btn question-button add-button">
                                   <i class="fa fa-arrow-up icon-button" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
-                        <div class="col-6 col-sm-1 col-q">
+                        <div *ngIf="!currentSurvey.finished" class="col-6 col-sm-1 col-q">
                             <div class="col-questions">
                                 <a (click)="removeQuestion(i,j)" class="btn question-button remove-button">
                                   <i class="fa fa-trash-o icon-button" aria-hidden="true"></i>
@@ -73,17 +73,20 @@
                     </div>
                 </div>
                 <div class="add-question">
-                    <button (click)="addQuestion(i)" class="btn question-button add-question-button">
+                    <button *ngIf="!currentSurvey.finished" (click)="addQuestion(i)" class="btn question-button add-question-button">
                       </button>
                 </div>
             </div>
+        </div>
+        <div class="add-category">
+            <a (click)="returnSurveys()" class="btn add-category-button">Volver</a>
         </div>
     </div>
     <div *ngIf="isShowingSurveys()">
         <div class="card" *ngFor="let survey of surveys; let i = index">
             <div class="card-header" [ngStyle]="{'z-index' : getZSurvey(i), 'cursor': getCursorSurvey(i)}"
-                [attr.data-toggle]="isCollapsible(i)"  [attr.href]="'#collapse'+i"
-                aria-expanded="false" [attr.aria-controls]="'collapse'+i" (click)="selectSurvey(i)">
+                [attr.data-toggle]="isCollapsibleSurvey(i)"  [attr.href]="'#collapseSurvey'+i"
+                aria-expanded="false" [attr.aria-controls]="'collapseSurvey'+i" >
                 <form  *ngIf="isEditingSurvey(i)" #categoryForm="ngForm" (ngSubmit)="save()">
                     <div class = "row align-items-center">
                         <div class="col col-sm-8">
@@ -102,100 +105,52 @@
                         <div class="col-lg-4 category-buttons">
                             <div class="btn-group">
                                 <button (click)="updateSurvay()" class="btn category-button-edit category-button">
-                                  Bien</button>
+                                  Listo</button>
                                 <button type="button" class="btn category-button-delete category-button"
-                                  (click)="cancel(i)">
+                                  (click)="cancelEditingSurvey()">
                                   Cancelar</button>
                             </div>
                         </div>
                     </div>
                 </form>
                 <div *ngIf="!isEditingSurvey(i)" class = "row">
-                    <div class="col-sm-12 col-lg-8">
+                    <div class="col-12 col-sm-9">
                           <div class="survey-name-text"> {{survey.name}} </div>
                     </div>
-                    <div class="col-lg-4 category-buttons">
-                        <div class="btn-group">
-                            <button type="button" class="btn category-button-edit category-button"
-                                 (click)="edit(i)">Editar</button>
-                            <button type="button" class="btn category-button-delete category-button"
-                                  (click)="deleteSurvey(i)">Eliminar</button>
-                        </div>
+                    <div class="col col-sm-1 category-buttons">
+                            <i class=" fa fa-pencil fa-2x" (click)="editSurvey(i)"></i>
+                    </div>
+                    <div class="col col-sm-1 category-buttons">
+                            <i class=" fa fa-cogs fa-2x" (click)="selectSurvey(i)"></i>
+                    </div>
+                    <div class="col col-sm-1 category-buttons">
+                            <i class=" fa fa-trash-o fa-2x" (click)="deleteSurvey(i)"></i>
                     </div>
                 </div>
             </div>
-            <!-- <div class="card-header" >
-                <form  *ngIf="isEditingSurvey(i)" #categoryForm="ngForm" (ngSubmit)="save()">
-                    <div class = "row align-items-center">
-                        <div class="col col-sm-8">
-                            <div  class="form-group">
-                                <input type="text" class="form-control input-category-name"
-                                     required name="name" [(ngModel)]="survey.name"
-                                     #nameSurvey="ngModel" placeholder="Nombre del cuestionario">
-                                 <div *ngIf="nameSurvey.errors && (nameSurvey.dirty || nameSurvey.touched)"
-                                     class="alert alert-danger">
-                                    <div [hidden]="!nameSurvey.errors.required">
-                                      Nombre requerido
-                                    </div>
-                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 category-buttons">
-                            <div class="btn-group">
-                                <button type="submit" class="btn category-button-edit category-button">
-                                  Bien</button>
-                                <button type="button" class="btn category-button-delete category-button"
-                                  (click)="cancel(i)">
-                                  Cancelar</button>
-                            </div>
-                        </div>
+            <div [attr.id]="'collapseSurvey'+i" class="collapse" >
+                <div class="row">
+                    <div class="col btn btn-survey" (click)="downloadSurvey(i)">
+                        <i class=" fa Example of download fa-download fa-2x"></i>
+                        <div class="btn-survey-text">Descargar</div>
                     </div>
-                </form>
-                <div *ngIf="!isEditingSurvey(i)" class = "row">
-                    <div class="col-sm-12 col-lg-8">
-                          <div class="category-text"> {{survey.name}} </div>
+                    <div class="col btn btn-survey"(click)="finish(i)">
+                        <i *ngIf="survey.finished" class=" fa fa-check-square fa-2x"></i>
+                        <i *ngIf="!survey.finished" class=" fa fa-square-o fa-2x"></i>
+                        <div *ngIf="survey.finished" class="btn-survey-text">finalizada</div>
+                        <div *ngIf="!survey.finished" class="btn-survey-text">finalizar</div>
                     </div>
-                    <div class="col-lg-4 category-buttons">
-                        <div class="btn-group">
-                            <button type="button" class="btn category-button-edit category-button"
-                                 (click)="edit(i)">Editar</button>
-                            <button type="button" class="btn category-button-delete category-button"
-                                  (click)="delete(i)">Eliminar</button>
-                        </div>
+                    <div class="col btn btn-survey" (click)="activate(i)">
+                        <i *ngIf="survey.active" class=" fa fa-check-circle-o fa-2x"></i>
+                        <i *ngIf="!survey.active" class=" fa Example of circle-o fa-circle-o fa-2x"></i>
+                        <div *ngIf="survey.active" class="btn-survey-text">desactivar</div>
+                        <div *ngIf="!survey.active" class="btn-survey-text">activar</div>
+                    </div>
+                    <div class="col btn btn-survey" (click)="cloneSurvey(i)">
+                        <i class=" fa fa-clone fa-2x"></i>
+                        <div class="btn-survey-text">clonar</div>
                     </div>
                 </div>
-            </div> -->
-            <div [attr.id]="'collapseSurvey'+j" class="collapse" >
-                <!-- <div class="container-questions">
-                    <div class="row row-questions"  *ngFor="let question of category.questions; let j = index">
-                        <div class="col-1 col-sm-1 col-q">
-                            <div class="col-questions">
-                                <h4 class="pos-question">{{question.pos}}</h4>
-                            </div>
-                        </div>
-                        <div class="col-11 col-sm-9 col-q" style="text-align:left;">
-                            <a class="question-text" (click)="editQuestion(i,j)">{{question.title}}</a>
-                        </div>
-                        <div class="col-6 col-sm-1 col-q">
-                            <div class="col-questions">
-                                <a (click)="editQuestion(i,j)" class="btn question-button add-button">
-                                  <i class="fa fa-arrow-up icon-button" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-6 col-sm-1 col-q">
-                            <div class="col-questions">
-                                <a (click)="removeQuestion(i,j)" class="btn question-button remove-button">
-                                  <i class="fa fa-trash-o icon-button" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="add-question">
-                    <button (click)="addQuestion(j)" class="btn question-button add-question-button">
-                      </button>
-                </div> -->
             </div>
         </div>
         <div class="add-category">

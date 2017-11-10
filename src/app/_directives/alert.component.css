@@ -1,4 +1,14 @@
 .alert{
+  position: absolute;
+    display: block;
+    margin: auto;
+    max-width: inherit;left: 50%;
+    transform: translateX(-50%);
+}
+
+.alert-container{
   position: fixed;
+  display: block;
+  width: 100%;
   top: 0;
 }

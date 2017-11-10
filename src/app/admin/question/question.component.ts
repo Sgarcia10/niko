@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewChecked, ViewChild  } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { Location } from '@angular/common';
-import { Question, QuestionBasic, Option, Message, DownloadURL} from '../../_models/index';
+import { Question, QuestionBasic, Option, Message,
+  DownloadURL, Survey} from '../../_models/index';
 import { QuestionService, AlertService, DialogService } from '../../_services/index';
 import { types } from '../../_data/questionTypes';
 
@@ -56,6 +57,7 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
   private currentQuestionCategoria: Question;
   private update: boolean;
   private idSurvey: string;
+  private currentSurvey: Survey;
 
   constructor(
     private route: ActivatedRoute,
@@ -67,7 +69,13 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
   ) { }
 
   ngOnInit() {
-    this.idSurvey = this.route.snapshot.paramMap.get('idSurvey');
+    this.currentSurvey = this.service.getCurrentSurvey();
+    if (this.currentSurvey === null)
+    {
+      this.router.navigate(['../'], { relativeTo: this.route });
+      return;
+    }
+    this.idSurvey = this.service.getCurrentSurvey()._id;
     this.pos = 0;
     this.types = types;
     this.editable = false;

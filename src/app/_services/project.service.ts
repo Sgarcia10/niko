@@ -25,11 +25,17 @@ export class ProjectService {
         return this.http.get('api/user/projects/' + _id).map((response: Response) => response.json());
     }
 
+    getActiveSurvey(){
+        return this.http.get('api/user/projects/activeSurvey')
+        .map((response: Response) => response.json());
+    }
+
+    delete(_id: string) {
+        return this.http.delete('api/user/projects/'+_id);
+    }
+
     // update(question: QuestionDetail) {
     //     return this.http.put('api/admin/questions/update', question);
     // }
     //
-    // delete(question: Question) {
-    //     return this.http.post('api/admin/questions/delete', question);
-    // }
 }

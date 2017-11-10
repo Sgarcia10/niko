@@ -14,32 +14,20 @@ exports.getByUserId = function(req, res){
       .catch(err => res.status(400).send('No se pudo guardar: '+err));
 }
 
+exports.getActiveSurvey = function(req, res){
+    projectController.getActiveSurvey()
+      .then(survey => res.send(survey))
+      .catch(err => res.status(400).send('No se pudo guardar: '+err));
+}
+
+exports.delete = function(req, res){
+    projectController.delete(req.params._id)
+    .then(project => res.send(project))
+    .catch(err => res.status(400).send('No se pudo eliminar: '+err));
+}
+
 // exports.update = function(req, res){
 //     questionController.update(req.body)
 //       .then(category => res.send(category))
 //       .catch(err => res.status(400).send('No se pudo actualizar: '+err));
-// }
-//
-// exports.getById = function(req, res){
-//     questionController.getById(req.params._id)
-//       .then(question => res.send(question))
-//       .catch(err => res.status(400).send('No se puede buscar: '+err));
-// }
-//
-// exports.getAll = function(req, res){
-//     questionController.getAll()
-//       .then(questions => res.send(questions))
-//       .catch(err => res.status(400).send('No se puede buscar: '+err));
-// }
-//
-// exports.getByPos = function(req, res){
-//     questionController.getByPos(req.params.pos)
-//       .then(question => res.send(question))
-//       .catch(err => res.status(400).send('No se puede buscar: '+err));
-// }
-//
-// exports.delete = function(req, res){
-//     questionController.delete(req.body)
-//     .then(category => res.send(category))
-//     .catch(err => res.status(400).send('No se pudo eliminar: '+err));
 // }

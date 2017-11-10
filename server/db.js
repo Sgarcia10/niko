@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var dbURI = require('./config.json').connectionURI;
+var dbURI = process.env.MONGODB_URI || require('./config.json').connectionURI;
 
 mongoose.Promise = global.Promise;
 

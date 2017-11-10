@@ -9,7 +9,7 @@ import { PopoverModule } from 'ngx-popover';
 
 import { UserRoutingModule } from './user-routing.module';
 import { QuestionComponent } from './question/question.component';
-import {  QuestionService, AnswerService, ProjectService } from '../_services/index';
+import {  QuestionService, AnswerService, ProjectService, DialogService } from '../_services/index';
 
 @NgModule({
   imports: [
@@ -27,7 +27,8 @@ import {  QuestionService, AnswerService, ProjectService } from '../_services/in
      CustomHttpProvider,
      QuestionService,
      AnswerService,
-     ProjectService
+     ProjectService,
+     DialogService
    ]
 })
 export class UserModule { }

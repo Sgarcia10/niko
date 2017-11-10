@@ -32,7 +32,8 @@ router.use(function(req, res, next) {
 	if (token) {
 
 		// verifies secret and checks exp
-		jwt.verify(token, config.secret, function(err, decoded) {
+    var secret = process.env.SECRET || config.secret;
+		jwt.verify(token, secret, function(err, decoded) {
 			if (err) {
 
 				return res.status(401).send({
@@ -65,6 +66,10 @@ router.post('/admin/surveys/create', surveyService.create);
 router.put('/admin/surveys/update', surveyService.update);
 router.delete('/admin/surveys/:_id', surveyService.delete);
 router.get('/admin/surveys', surveyService.getAll);
+router.post('/admin/surveys/clone/', surveyService.clone);
+router.put('/admin/surveys/activate/:_id,:currentActive', surveyService.activate);
+router.put('/admin/surveys/finish/:_id', surveyService.finish);
+router.get('/admin/surveys/getRedable/:_id', surveyService.getRedable);
 
 router.post('/admin/categories/create', categoryService.create);
 router.put('/admin/categories/:_id', categoryService.update);
@@ -80,6 +85,8 @@ router.get('/admin/questions/pos/:pos', questionService.getByPos);
 
 router.post('/user/projects/create', projectService.create);
 router.get('/user/projects/:_id', projectService.getByUserId);
+router.get('/user/projects/activeSurvey', projectService.getActiveSurvey);
+router.delete('/user/projects/:_id', projectService.delete);
 
 router.post('/user/answer/create', answerService.create);
 

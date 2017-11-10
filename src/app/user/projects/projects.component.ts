@@ -1,7 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-import { Answer, Project, Period, UserProject } from '../../_models/index';
-import { AnswerService, ProjectService, AlertService } from '../../_services/index';
+import { Answer, Project, Period, UserProject, Survey } from '../../_models/index';
+import { AnswerService, ProjectService, AlertService,
+  DialogService} from '../../_services/index';
 import { carreras } from './carreras';
 
 
@@ -19,12 +20,14 @@ export class ProjectsComponent implements OnInit {
   private currentProject: Project;
   private currentUser: UserProject;
   private projects: Project[] = [];
+
   constructor(
     private ngZone: NgZone,
     private router: Router,
     private route: ActivatedRoute,
     private answerService: AnswerService,
     private projectService: ProjectService,
+    private dialogService: DialogService,
     private alertService: AlertService) {
     window.onresize = (e) =>
     {
@@ -40,7 +43,7 @@ export class ProjectsComponent implements OnInit {
     window.scrollTo(0, 0);
     let year: number = new Date().getFullYear();
     this.year = year;
-    this.newProject = true;
+    this.newProject = false;
     this.projects = [];
     let u = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = new UserProject(u._id, u.username, u.code);
@@ -64,9 +67,8 @@ export class ProjectsComponent implements OnInit {
       this.projectService.getByUserId(this.currentUser.userId)
       .subscribe(
         data => {
-            if (!data) this.newProject = true;
+            if (data.length === 0) this.newProject = true;
             else{
-              this.newProject = false;
               this.projects = data;
             }
         },
@@ -80,7 +82,8 @@ export class ProjectsComponent implements OnInit {
 
       this.projectService.create(this.currentProject).subscribe(
         data => {
-            this.answerService.answer = new Answer('', data._id, 1, [], []);
+            const idSurvey = this.currentProject.idSurvey;
+            this.answerService.answer = new Answer('', idSurvey, data._id, 1, [], []);
             this.router.navigate(['./question'], { relativeTo: this.route });
         },
         err => {
@@ -88,12 +91,46 @@ export class ProjectsComponent implements OnInit {
         });
   }
 
-  private start()
+  private add()
   {
+    let survey: Survey = null;
+    this.projectService.getActiveSurvey()
+      .subscribe(
+        data => {
+            survey = data;
+        },
+        err => {
+            this.alertService.error(err);
+        }
+      );
+    if (survey){
       this.newProject = false;
-      this.currentProject = new Project('', '', '', '', 'individual', '',
+      this.currentProject = new Project('', survey._id, '', '', '', 'individual', '',
         new Period(2018, 1), '', this.currentUser);
       window.scrollTo(0, 0);
+    }
+    else{
+      this.alertService.error('Actualmente no hay encuestas disponibles');
+    }
+  }
+
+  private delete(i){
+    this.dialogService.confirm('Esta seguro de eliminar el proyecto?')
+      .then(res =>
+        {
+          if (res){
+            const project: Project = this.projects[i];
+            this.projectService.delete(project._id)
+            .subscribe(
+              data => {
+                  this.getProjects();
+              },
+              err => {
+                  this.alertService.error(err);
+              }
+            );
+          }
+        });
   }
 
 }

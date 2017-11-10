@@ -1,20 +1,22 @@
 <div class="container-cover" [style.min-height.px]="height" >
 <div *ngIf="firstTime()" class="container container-full" >
     <div *ngIf="newProject" class="inicio" [style.margin-top.px]="height/2-120">
-        <a (click)="start()" class="btn btn-xl ">Crea tu primer proyecto</a>
+        <a (click)="add()" class="btn btn-xl ">Crea tu primer proyecto</a>
     </div>
     <div *ngIf="!newProject" class="container-form" [style.margin-top.px]="getMargin()">
           <div class="titulo-lista">
               <h2>Tus proyectos:</h2>
           </div>
-          <div class="row card-header" *ngFor="let project of projects">
+          <div class="row card-header" *ngFor="let project of projects; let i = index">
               <div class="col-11 project-name">
                 {{project.title}}
               </div>
               <div class="col-1 project-delete">
-                  <i class="fa fa-trash-o fa-3x delete-button" aria-hidden="true"></i>
+                  <i class="fa fa-trash-o fa-2x delete-button"
+                    (click)="delete(i)" aria-hidden="true"></i>
               </div>
           </div>
+          <a (click)="add()" class="btn btn-xl ">Agregar proyecto</a>
     </div>
     <div *ngIf="false" class="container-form" [style.margin-top.px]="getMargin()">
         <div class="login-text">

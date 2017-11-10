@@ -4,6 +4,12 @@
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
     "module": "es2015",
+    "noEmitOnError": true,
+    "paths": {
+      "pdfkit": [
+        "lib/pdfkit"
+      ]
+    },
     "types": []
   },
   "exclude": [

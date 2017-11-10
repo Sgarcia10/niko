@@ -19,7 +19,7 @@ const adminRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
           { path: 'survey', component: SurveyComponent },
-          { path: 'survey/question/:idSurvey', component: QuestionComponent },
+          { path: 'survey/question', component: QuestionComponent },
           { path: '', redirectTo: 'survey' }
         ]
       }

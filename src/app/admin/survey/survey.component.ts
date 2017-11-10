@@ -1,10 +1,16 @@
 import 'rxjs/add/operator/switchMap';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Category, QuestionBasic, Question, Option,
-  Survey, Message } from '../../_models/index';
+  Survey, Message, CategoryFull } from '../../_models/index';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { CategoryService, AuthenticationService, AlertService,
   DialogService, QuestionService, SurveyService } from '../../_services/index';
+// import jsPDF from 'jspdf';
+
+// @ts-ignore: Unreachable code error
+import * as PDFKit from '../assets/pdfkit.js';
+import blobStream from 'blob-stream';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-cuestionario',
@@ -40,6 +46,7 @@ export class SurveyComponent implements OnInit {
     this.newCategory = false;
     this.selectedOption = 'cancelar';
     this.editingSurveyNo = -1;
+    this.questionService.setCurrentSurvey(null);
     this.loadAllSurveys();
     this.router.events.subscribe((evt) => {
             window.scrollTo(0, 0);
@@ -116,11 +123,6 @@ export class SurveyComponent implements OnInit {
       }
   }
 
-  private editSurvey(i)
-  {
-      this.editingSurveyNo = i;
-  }
-
   private deleteSurvey(i)
   {
     this.dialogService.confirm('Esta seguro de eliminar el custionario?')
@@ -133,7 +135,7 @@ export class SurveyComponent implements OnInit {
                 if (res2){
                   const survey = this.surveys[i];
                   this.surveyService.delete(survey._id).subscribe(
-                    sur => {
+                    surv => {
                       this.loadAllSurveys();
                     },
                     err => this.alertService.error(err)
@@ -142,6 +144,140 @@ export class SurveyComponent implements OnInit {
             });
           }
         });
+  }
+
+  private activate(i)
+  {
+      const survey: Survey = this.surveys[i];
+      this.surveyService.activate(survey._id, survey.active).subscribe(
+        sur => {
+          this.loadAllSurveys();
+        },
+        err => this.alertService.error(err)
+      );
+  }
+
+  private finish(i)
+  {
+    this.dialogService.confirm('Esta seguro de completar el custionario? Recuerde que despues no podrá modificar las preguntas')
+      .then(res1 =>
+        {
+          if (res1){
+            const survey: Survey = this.surveys[i];
+            this.surveyService.finish(survey._id).subscribe(
+              sur => {
+                this.loadAllSurveys();
+              },
+              err => this.alertService.error(err)
+            );
+          }
+        });
+  }
+
+  private cloneSurvey(i)
+  {
+      const survey: Survey = this.surveys[i];
+      this.surveyService.clone(survey).subscribe(
+        sur => {
+          this.loadAllSurveys();
+        },
+        err => this.alertService.error(err)
+      );
+  }
+
+  private editSurvey(i)
+  {
+      const survey = this.surveys[i];
+      const idSurvey = survey._id;
+      let doc = new PDFKit();
+      let stream = doc.pipe(blobStream());
+      doc.font('Times-Roman')
+        .fontSize(20)
+        .text(survey.name, {
+          align: 'center'})
+       .moveDown();
+      this.surveyService.getRedable(idSurvey).subscribe(
+        cats => {
+          let categories: CategoryFull[] = cats;
+          let n = 1;
+          for (let cat of categories) {
+              doc.font('Times-Roman')
+                .moveDown()
+                .fontSize(17)
+                .text(cat.name, {
+                  align: 'justify'});
+              for (let question of cat.questions) {
+                  doc.font('Times-Roman')
+                    .fontSize(12)
+                    .text((n) + '.  ' + question.title, {
+                      align: 'justify',
+                      indent: 10});
+                  for (let option of question.options) {
+                    doc.font('Times-Roman')
+                      .fontSize(12)
+                      .text(option._id+'. '+option.text, {
+                        align: 'justify',
+                        indent: 30});
+                  }
+                  n++;
+              }
+          }
+          doc.end();
+        },
+        err => this.alertService.error(err)
+      );
+      // this.editingSurveyNo = i;
+      stream.on('finish', () =>{
+        let blob = stream.toBlob('application/pdf');
+        console.log('holaa');
+        saveAs(blob);
+      });
+      // doc.text(105, 20, 'This is the default font.', null, null, 'center');
+      // doc.addPage();
+      // doc.setFont('courier');
+      // doc.setFontType('normal');
+      // doc.text('Lorem ipsum dolor sit amet, consetetur abore et dolore magna aliquyam' +
+      // ' erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.'+
+      // ' Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 10, 10, {maxWidth: 150, align: 'justify'});
+      // doc.text(20, 260, 'This is courier normal. fsdf sdfds fsdf ds ');
+      // doc.save();
+      // const pageWidth = 120;
+      // const lineHeight = 15;
+      // const margin = 20;
+      // const maxLineWidth = pageWidth - margin * 2;
+      // const fontSize = 14;
+      // const text = 'Two households, both alike in dignity,' +
+      // 'In fair Verona, where we lay our scene,' +
+      // 'From ancient grudge break to new mutiny,' +
+      // 'Where civil blood makes civil hands unclean.' +
+      // 'From forth the fatal loins of these two foes' +
+      // 'A pair of star-cross\'d lovers take their life;' +
+      // 'Whole misadventured piteous overthrows' +
+      // 'Do with their death bury their parents\' strife.' +
+      // 'The fearful passage of their death-mark\'d love,' +
+      // 'And the continuance of their parents\' rage,' +
+      // 'Which, but their children\'s end, nought could remove, Is now the two hours\' traffic of our stage;' +
+      // 'The which if you with patient ears attend,' +
+      // 'What here shall miss, our toil shall strive to mend.';
+      // const textLines = doc
+      // .setFont('helvetica', 'neue')
+      // .setFontSize(fontSize)
+      // .splitTextToSize(text, maxLineWidth);
+      // console.log(textLines);
+  }
+
+  private writePdf(doc, id){
+    this.categoryService.getBySurveyId(id).subscribe(
+      data => {
+        let categories = data;
+      },
+      err => this.router.navigate(['/'])
+    );
+  }
+
+  private cancelEditingSurvey()
+  {
+      this.editingSurveyNo = -1;
   }
 
   private selectSurvey(i){
@@ -168,6 +304,7 @@ export class SurveyComponent implements OnInit {
     this.numOfQuestions = [];
     this.questionService.setQuestion(null);
     this.questionService.setQuestionBasic(null);
+    this.questionService.setCurrentSurvey(this.currentSurvey);
     this.categoryService.getBySurveyId(this.currentSurvey._id).subscribe(
       categories => {
         this.categories = categories;
@@ -244,7 +381,7 @@ export class SurveyComponent implements OnInit {
     const idCategory = this.categories[i]._id;
     const questionBasic = new QuestionBasic('', pos, '', idCategory);
     this.questionService.setQuestionBasic(questionBasic);
-    this.router.navigate(['./question', idCategory], { relativeTo: this.route });
+    this.router.navigate(['./question'], { relativeTo: this.route });
   }
 
   private editQuestion(i, j)
@@ -256,7 +393,7 @@ export class SurveyComponent implements OnInit {
           question => {
             this.questionService.setQuestion(question);
             this.questionService.setQuestionBasic(questionBasic);
-            this.router.navigate(['./question', this.currentSurvey._id], { relativeTo: this.route });
+            this.router.navigate(['./question'], { relativeTo: this.route });
           },
           err => {
               this.alertService.error(err);
@@ -338,6 +475,11 @@ export class SurveyComponent implements OnInit {
   private isCollapsible(i)
   {
     return this.isEditable(i) ? '' : 'collapse';
+  }
+
+  private returnSurveys()
+  {
+    this.currentSurvey = null;
   }
 
 }

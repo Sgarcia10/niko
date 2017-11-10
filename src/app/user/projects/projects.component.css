@@ -178,11 +178,11 @@ select:invalid{
 
 .delete-button{
   position: relative;
-top: 50%;
-text-align: center;
-margin-top: -0.9em;
-min-height: 100%;
-min-width: 100%;
+  top: 50%;
+  text-align: center;
+  margin-top: -0.9em;
+  min-height: 100%;
+  min-width: 100%;
   height: 30px;
   width: 30px;
   vertical-align: middle;
@@ -190,4 +190,5 @@ min-width: 100%;
   text-align: center;
   padding-top: 15px;
   padding-bottom: 15px;
+  cursor: pointer;
 }

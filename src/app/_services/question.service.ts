@@ -3,13 +3,14 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import { QuestionBasic, Question } from '../_models/index';
+import { QuestionBasic, Question, Survey } from '../_models/index';
 
 @Injectable()
 export class QuestionService {
 
     private questionBasic: QuestionBasic = null;
     private question: Question = null;
+    private currentSurvey: Survey = null;
 
     constructor(private http: Http) { }
 
@@ -51,5 +52,13 @@ export class QuestionService {
 
     getQuestion(){
         return this.question;
+    }
+
+    setCurrentSurvey(survey: Survey){
+      this.currentSurvey = survey;
+    }
+
+    getCurrentSurvey(){
+      return this.currentSurvey;
     }
 }

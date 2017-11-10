@@ -2,6 +2,7 @@ import {  Message } from './question';
 export class Answer {
     constructor(
         public _id: string,
+        public idSurvey,
         public idProject: string,
         public currentPos: number,
         public questionsAsked: QuestionAsked [],

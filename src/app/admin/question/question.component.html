@@ -6,7 +6,7 @@
       <div *ngIf="option.message">
           {{option.message.title}}   {{option.message.text}}   {{option.message.uploadURL}}</div>
     </div> -->
-    <form  #questionForm="ngForm" (ngSubmit)="save()">
+    <form *ngIf="currentQuestion"  #questionForm="ngForm" (ngSubmit)="save()">
         <div class="card">
             <div class="card-header">
                 <h3 for="title">Pregunta {{pos}}</h3>
@@ -33,9 +33,9 @@
                         <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let type of types; let i = index">
                             <div class="form-check">
                                 <label class="form-check-label">
-                                  <input type="radio" class="form-check-input" name="tipo"
+                                  <input type="radio" class="form-check-input" [name]="'tipo'+i"
                                     id="'type'+i" value="{{type.type}}" [checked]="isSelectedType(i)"
-                                    [(ngModel)]="currentQuestion.type">
+                                    [(ngModel)]="currentQuestion.type" [disabled]="currentSurvey.finished">
                                       {{type.text}}
                                 </label>
                             </div>
@@ -124,7 +124,7 @@
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                               </a>
                         </div>
-                        <div class="col col-sm-1 btn-option">
+                        <div *ngIf="!currentSurvey.finished" class="col col-sm-1 btn-option">
                               <a id="delete-option-button" class="btn btn-primary question-button"(click)="deleteOption(j)">
                                 <i class="fa fa-trash-o" aria-hidden="true"></i>
                               </a>
@@ -135,21 +135,21 @@
                     <div class="form-group row" >
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input class="form-check-input" [checked]="option.jump>0" (click)="toggleJump(j)"
-                                   type="checkbox"> Saltar numero de currentQuestions:
+                                <input [name]="i+'saltarSelect'+j" class="form-check-input" [checked]="option.jump>0" (click)="toggleJump(j)"
+                                   type="checkbox" [disabled]="currentSurvey.finished"> Saltar numero de Preguntas:
                             </label>
                         </div>
                         <div *ngIf="option.jump>0" class="col-4 col-sm-2">
-                            <input class="form-control" type="number" value="1"
-                              name="'jump'+j" [(ngModel)]="option.jump">
+                            <input [name]="i+'saltarNum'+j" class="form-control" type="number" value="1"
+                              name="'jump'+j" [(ngModel)]="option.jump" [disabled]="currentSurvey.finished">
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" type="checkbox"
-                                  name="'textBox'+j" [checked]="option.isTextArea"
-                                  (click)="toggleTextArea(j)">
+                                  [name]="i+'abierta'+j" [checked]="option.isTextArea"
+                                  (click)="toggleTextArea(j)" [disabled]="currentSurvey.finished">
                                   Agregar respuesta abierta
                             </label>
                         </div>
@@ -182,19 +182,10 @@
                                     [(ngModel)]="option.message.downloadURL.name" placeholder="Nombre del archivo">
                                 </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="form-check col">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox"
-                                      name="'uploadURL'+j" [checked]="option.message.isTextArea" (click)="toggleUploadURL(j)">
-                                        El estudiante sube documento
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-            <div class="add-option">
+            <div class="add-option" *ngIf="!currentSurvey.finished" >
                 <a id="add-option-button" (click)="addOption(i)" class="btn btn-primary">
                   <h6 id="add-option-text">+</h6>
                 </a>

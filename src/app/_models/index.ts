@@ -4,3 +4,4 @@
 ﻿export * from './answer';
 ﻿export * from './project';
 ﻿export * from './survey';
+﻿export * from './categoryFull';

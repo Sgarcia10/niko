@@ -7,11 +7,13 @@ var surveySchema = new mongoose.Schema({
   },
   finished: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   },
   active: {
     type: Boolean,
-    required: true
+    required: true,
+    default: false
   }
 });
 
