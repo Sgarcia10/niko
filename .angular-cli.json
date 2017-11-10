@@ -53,5 +53,8 @@
   "defaults": {
     "styleExt": "css",
     "component": {}
-  }
+  },
+  "scripts": [
+    "./src/assets/pdfkit.js"
+  ]
 }

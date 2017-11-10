@@ -14,6 +14,7 @@ import { SurveyComponent } from './survey/survey.component';
 import { CategoryService, DialogService, QuestionService,
     SurveyService} from '../_services/index';
 import { QuestionComponent } from './question/question.component';
+import { FindComponent } from './find/find.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { QuestionComponent } from './question/question.component';
     DashboardComponent,
     ToolbarComponent,
     SurveyComponent,
-    QuestionComponent
+    QuestionComponent,
+    FindComponent
   ],
   providers: [
     CustomHttpProvider,

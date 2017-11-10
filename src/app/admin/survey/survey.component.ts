@@ -7,10 +7,11 @@ import { CategoryService, AuthenticationService, AlertService,
   DialogService, QuestionService, SurveyService } from '../../_services/index';
 // import jsPDF from 'jspdf';
 
-// @ts-ignore: Unreachable code error
-import * as PDFKit from 'pdfkit';
+// @ts-ignore Unreachable code error
+// import * as PDFKit from '../../../assets/pdfkit.js';
 import blobStream from 'blob-stream';
 import {saveAs} from 'file-saver';
+
 
 @Component({
   selector: 'app-cuestionario',
@@ -185,11 +186,15 @@ export class SurveyComponent implements OnInit {
       );
   }
 
-  private editSurvey(i)
+  private editSurvey(i){
+    this.editingSurveyNo = i;
+  }
+
+  private downloadSurvey(i)
   {
       const survey = this.surveys[i];
       const idSurvey = survey._id;
-      let doc = new PDFKit();
+      let doc = new PDFDocument();
       let stream = doc.pipe(blobStream());
       doc.font('Times-Roman')
         .fontSize(20)
@@ -226,44 +231,11 @@ export class SurveyComponent implements OnInit {
         },
         err => this.alertService.error(err)
       );
-      // this.editingSurveyNo = i;
       stream.on('finish', () =>{
         let blob = stream.toBlob('application/pdf');
         console.log('holaa');
         saveAs(blob);
       });
-      // doc.text(105, 20, 'This is the default font.', null, null, 'center');
-      // doc.addPage();
-      // doc.setFont('courier');
-      // doc.setFontType('normal');
-      // doc.text('Lorem ipsum dolor sit amet, consetetur abore et dolore magna aliquyam' +
-      // ' erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.'+
-      // ' Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.', 10, 10, {maxWidth: 150, align: 'justify'});
-      // doc.text(20, 260, 'This is courier normal. fsdf sdfds fsdf ds ');
-      // doc.save();
-      // const pageWidth = 120;
-      // const lineHeight = 15;
-      // const margin = 20;
-      // const maxLineWidth = pageWidth - margin * 2;
-      // const fontSize = 14;
-      // const text = 'Two households, both alike in dignity,' +
-      // 'In fair Verona, where we lay our scene,' +
-      // 'From ancient grudge break to new mutiny,' +
-      // 'Where civil blood makes civil hands unclean.' +
-      // 'From forth the fatal loins of these two foes' +
-      // 'A pair of star-cross\'d lovers take their life;' +
-      // 'Whole misadventured piteous overthrows' +
-      // 'Do with their death bury their parents\' strife.' +
-      // 'The fearful passage of their death-mark\'d love,' +
-      // 'And the continuance of their parents\' rage,' +
-      // 'Which, but their children\'s end, nought could remove, Is now the two hours\' traffic of our stage;' +
-      // 'The which if you with patient ears attend,' +
-      // 'What here shall miss, our toil shall strive to mend.';
-      // const textLines = doc
-      // .setFont('helvetica', 'neue')
-      // .setFontSize(fontSize)
-      // .splitTextToSize(text, maxLineWidth);
-      // console.log(textLines);
   }
 
   private writePdf(doc, id){

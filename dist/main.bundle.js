@@ -1327,7 +1327,7 @@ module.exports = __webpack_require__.p + "logout.63f73f2e480c638bde07.svg";
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
-    production: false
+    production: true
 };
 
 
