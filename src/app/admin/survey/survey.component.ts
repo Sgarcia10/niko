@@ -8,7 +8,7 @@ import { CategoryService, AuthenticationService, AlertService,
 // import jsPDF from 'jspdf';
 
 // @ts-ignore: Unreachable code error
-import * as PDFKit from '../assets/pdfkit.js';
+import * as PDFKit from 'pdfkit';
 import blobStream from 'blob-stream';
 import {saveAs} from 'file-saver';
 
