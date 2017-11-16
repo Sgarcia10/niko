@@ -8,6 +8,12 @@ exports.create = function(req, res){
       .catch(err => res.status(400).send('No se pudo guardar: '+err));
 }
 
+exports.getResult = function(req, res){
+    answerController.getResult(req.params.idProject)
+      .then(remarks => res.send(remarks))
+      .catch(err => res.status(400).send('No se encuentran las respeustas: '+err));
+}
+
 // exports.getByUserId = function(req, res){
 //     projectController.getByUserId(req.params._id)
 //       .then(projects => res.send(projects))

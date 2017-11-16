@@ -124,11 +124,6 @@ exports.getRedable = function(id){
             questions = values.slice(1, values.length);
             var cat = new CategoryFull(docs[n]);
             cat.questions = questions;
-            // docs[n].questions = [];
-            // for (var j = 0; j < questions.length; j++) {
-            //
-            //   docs[n].questions.push(questions[j]);
-            // }
             return cat;
           });
           promisesCat.push(prom);

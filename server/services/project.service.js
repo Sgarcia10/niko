@@ -11,13 +11,13 @@ exports.create = function(req, res){
 exports.getByUserId = function(req, res){
     projectController.getByUserId(req.params._id)
       .then(projects => res.send(projects))
-      .catch(err => res.status(400).send('No se pudo guardar: '+err));
+      .catch(err => res.status(400).send('No se encuentras los proyectos: '+err));
 }
 
 exports.getActiveSurvey = function(req, res){
     projectController.getActiveSurvey()
       .then(survey => res.send(survey))
-      .catch(err => res.status(400).send('No se pudo guardar: '+err));
+      .catch(err => res.status(400).send('No se encuentras los proyectos: '+err));
 }
 
 exports.delete = function(req, res){

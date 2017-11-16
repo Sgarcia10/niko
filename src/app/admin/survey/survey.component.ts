@@ -5,10 +5,6 @@ import { Category, QuestionBasic, Question, Option,
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { CategoryService, AuthenticationService, AlertService,
   DialogService, QuestionService, SurveyService } from '../../_services/index';
-// import jsPDF from 'jspdf';
-
-// @ts-ignore Unreachable code error
-// import * as PDFKit from '../../../assets/pdfkit.js';
 import blobStream from 'blob-stream';
 import {saveAs} from 'file-saver';
 
@@ -109,7 +105,7 @@ export class SurveyComponent implements OnInit {
     this.surveys.push(survey);
   }
 
-  private updateSurvay()
+  private updateSurvey()
   {
       const survey = this.surveys[this.editingSurveyNo];
       if (survey)
@@ -232,9 +228,9 @@ export class SurveyComponent implements OnInit {
         err => this.alertService.error(err)
       );
       stream.on('finish', () =>{
-        let blob = stream.toBlob('application/pdf');
-        console.log('holaa');
-        saveAs(blob);
+        let blob: Blob = stream.toBlob('application/pdf');
+        const curentTime = Date.now();
+        saveAs(blob, 'survey'+curentTime+'.pdf');
       });
   }
 

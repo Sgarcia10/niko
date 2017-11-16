@@ -27,7 +27,7 @@ exports.getAll = function(req, res){
 }
 
 exports.getByPos = function(req, res){
-    questionController.getByPos(req.params.pos)
+    questionController.getByPos(req.params.pos, req.params.idSurvey)
       .then(question => res.send(question))
       .catch(err => res.status(400).send('No se puede buscar: '+err));
 }

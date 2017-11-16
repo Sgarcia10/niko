@@ -7,3 +7,4 @@ export * from './question.service';
 export * from './answer.service';
 export * from './project.service';
 export * from './survey.service';
+export * from './dashboard.service';

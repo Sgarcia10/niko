@@ -22,7 +22,7 @@ export class ProjectService {
     }
 
     getByUserId(_id: string) {
-        return this.http.get('api/user/projects/' + _id).map((response: Response) => response.json());
+        return this.http.get('api/user/projects/user/' + _id).map((response: Response) => response.json());
     }
 
     getActiveSurvey(){

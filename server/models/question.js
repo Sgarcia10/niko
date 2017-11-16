@@ -39,7 +39,10 @@ var option = new mongoose.Schema({
     required: true,
     default: false,
   },
-  message: message
+  message: {
+    type: message,
+    required: false
+  }
 });
 
 
@@ -67,6 +70,3 @@ var questionSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Question', questionSchema);
-// module.exports = mongoose.model('Option', option);
-// module.exports = mongoose.model('Message', message);
-// module.exports = mongoose.model('DownloadURL', downloadURL);

@@ -2,6 +2,7 @@ export class Project {
     constructor(
         public _id: string,
         public idSurvey: string,
+        public currentQuestionPos: number,
         public title: string,
         public adviser: string,
         public subject: string,

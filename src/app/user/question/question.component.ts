@@ -2,10 +2,12 @@ import { Component, OnInit, NgZone, ElementRef,
   ViewChild, AfterViewInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute} from '@angular/router';
-import { Question, QuestionBasic, Category, Answer,
-  Message, OptionAnswered, QuestionAsked } from '../../_models/index';
+import { Question, QuestionBasic, Category,
+  Message, OptionAnswered, QuestionAnswered } from '../../_models/index';
 import { QuestionService, AnswerService, AlertService } from '../../_services/index';
 import { types } from '../../_data/questionTypes';
+import blobStream from 'blob-stream';
+import {saveAs} from 'file-saver';
 
 @Component({
   selector: 'app-question',
@@ -15,15 +17,16 @@ import { types } from '../../_data/questionTypes';
 export class QuestionComponent implements OnInit, AfterViewInit {
 
   @ViewChild('containerQuestion') elementView: ElementRef;
-  private currentQuestion: Question = null;
-  private currentPos: number;
+  private currentQuestion: Question;
+  private currentQuestionAnswered: QuestionAnswered;
   private  height;
   private margin: number;
   private available: boolean;
   private isShowMessage: boolean;
   private isShowResult: boolean;
   private currentMessage: Message = null;
-  private optionsAnswered = [];
+  private optionsAnswered: OptionAnswered[];
+  private remarks: Message[];
   private types = types;
 
   constructor(
@@ -49,15 +52,18 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.available = false;
-    this.height = window.innerHeight;
-    this.isShowResult = false;
-    this.isShowMessage = false;
-    this.optionsAnswered = [];
-    if ( this.answerService.answer) this.currentPos = this.answerService.answer.currentPos;
-    else this.currentPos = 1;
-    this.loadCurrentQuestion();
-    this.getMargin();
+    if (this.answerService.getQuestionAnswered()){
+      this.available = false;
+      this.height = window.innerHeight;
+      this.isShowResult = false;
+      this.isShowMessage = false;
+      this.optionsAnswered = [];
+      this.remarks = [];
+      this.currentQuestionAnswered = this.answerService.getQuestionAnswered();
+      this.loadCurrentQuestion();
+      this.getMargin();
+    }
+    else  this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   ngAfterViewInit(){
@@ -77,23 +83,22 @@ export class QuestionComponent implements OnInit, AfterViewInit {
 
 
   private loadCurrentQuestion(){
-      if (this.answerService.answer){
-          this.questionService.getByPos(this.currentPos).subscribe(
-            question => {
-              if (!(question==='')){
-                this.currentQuestion = question;
-                this.loadAnswer();
-                this.available = true;
-              }
-              else{
-                this.isShowResult = true;
-              }
-            },
-            err => this.router.navigate(['../'], { relativeTo: this.route })
-          );
-      }
-      else  this.router.navigate(['../'], { relativeTo: this.route });
-
+      let currentPos = this.currentQuestionAnswered.posQuestion;
+      this.questionService.getByPos(currentPos, this.currentQuestionAnswered.idSurvey)
+        .subscribe(
+          data => {
+            if (!(data==='')){
+              let question: Question = data;
+              this.currentQuestion = question;
+              this.loadAnswer();
+              this.available = true;
+            }
+            else{
+              this.getResult();
+            }
+          },
+          err => this.router.navigate(['../'], { relativeTo: this.route })
+        );
   }
 
   private loadAnswer(){
@@ -108,19 +113,14 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       }
       else{
           for ( let option of this.currentQuestion.options){
-              let o: OptionAnswered = new OptionAnswered(option._id, option.text, false, 'a');
+              let o: OptionAnswered = new OptionAnswered(option._id, option.text, false, '');
               this.optionsAnswered.push(o);
           }
       }
 
-      let q: QuestionAsked = new QuestionAsked(
-        this.currentQuestion._id,
-        this.currentQuestion.title,
-        this.currentQuestion.type,
-        this.optionsAnswered);
-
-      this.answerService.answer.questionsAsked.push(q);
-
+      this.currentQuestionAnswered.title = this.currentQuestion.title;
+      this.currentQuestionAnswered.type = this.currentQuestion.type;
+      this.currentQuestionAnswered.optionsAnswered = this.optionsAnswered;
   }
 
   private save(){
@@ -142,36 +142,98 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   }
 
   private siguiente(){
-    this.available = false;
-    this.jump();
-    this.loadCurrentQuestion();
-    // this.answerService.create().subscribe(
-    //   data => {
-    //
-    //   },
-    //   err => {
-    //      this.alertService.error(err);
-    //   }
-    // )
+    // this.available = false;
+    let currentPos = this.currentQuestionAnswered.posQuestion;
+    let nextPos = this.jump();
+    let idProject = this.currentQuestionAnswered.idProject;
+    let idSurvey = this.currentQuestionAnswered.idSurvey;
+    this.answerService.setQuestionAnswered(this.currentQuestionAnswered);
+    this.answerService.create().subscribe(
+      data => {
+        this.currentQuestionAnswered = new QuestionAnswered('', nextPos,
+        idSurvey, idProject, currentPos, '', '', [], []);
+        if (nextPos>1) this.getResult();
+        else this.loadCurrentQuestion();
+      },
+      err => {
+         this.alertService.error(err);
+      }
+    );
   }
 
-  private jump(){
+  private jump(): number{
       let i = 0;
       let n = 0;
       for (let option of this.optionsAnswered)
       {
         if (option.checked)
         {
-          if (this.currentQuestion.options[i].message){
-            this.answerService.answer.remarks.push(option.message);
+          const message = this.currentQuestion.options[i].message;
+          const jump = this.currentQuestion.options[i].jump;
+          if (message){
+            this.currentQuestionAnswered.remarks.push(message);
           }
-          if (this.currentQuestion.options[i].jump>n){
-            n = this.currentQuestion.options[i].jump;
+          if (jump>n){
+            n = jump;
           }
         }
         i++;
       }
-      this.currentPos = this.currentPos+ n + 1;
+      return this.currentQuestionAnswered.posQuestion + n + 1;
+  }
+
+  private getResult(){
+    const idProject = this.currentQuestionAnswered.idProject;
+    this.answerService.getResult(idProject).subscribe(
+      data => {
+        const finalMessage = new Message('', 'Esperamos que niko te haya ayudado.', null);
+        this.remarks = data;
+        this.remarks.push(finalMessage);
+        this.isShowResult = true;
+      },
+      err => {
+         this.alertService.error(err);
+      }
+    );
+  }
+
+  private closeResult(){
+    this.isShowResult = false;
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
+  private downloadResult(){
+    let doc = new PDFDocument();
+    let stream = doc.pipe(blobStream());
+    let date = new Date();
+    let u = JSON.parse(localStorage.getItem('currentUser'));
+    doc.font('Times-Bold')
+      .fontSize(14)
+      .text(u.username)
+      .moveDown()
+      .text(u.code)
+      .moveDown()
+      .text(date.getDay()+'/'+date.getMonth()+'/'+date.getFullYear())
+      .moveDown()
+      .moveDown();
+    for (let i = 0; i<this.remarks.length; i++){
+      let message = this.remarks[i];
+      doc.font('Times-Bold')
+        .fontSize(16)
+        .text(message.title)
+        .moveDown()
+        .font('Times-Roman')
+        .fontSize(14)
+        .text(message.text)
+        .moveDown()
+        .moveDown();
+    }
+    doc.end();
+    stream.on('finish', () =>{
+      let blob: Blob = stream.toBlob('application/pdf');
+      const curentTime = Date.now();
+      saveAs(blob, 'result'+curentTime+'.pdf');
+    });
   }
 
   private isTextArea(i){
@@ -202,12 +264,6 @@ export class QuestionComponent implements OnInit, AfterViewInit {
 
   private showMessage(){
     this.isShowMessage = true;
-  }
-
-
-  private closeResult(){
-    this.isShowResult = false;
-    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private closeMessage(){

@@ -18,8 +18,8 @@ export class QuestionService {
         return this.http.get('api/admin/questions/' + _id).map((response: Response) => response.json());
     }
 
-    getByPos(pos: number) {
-        return this.http.get('api/admin/questions/pos/' + pos).map((response: Response) => response.json());
+    getByPos(pos: number, idSurvey: string) {
+        return this.http.get('api/user/questions/pos/' + pos + ',' + idSurvey).map((response: Response) => response.json());
     }
 
     getAll() {

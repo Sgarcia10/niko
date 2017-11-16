@@ -73,7 +73,7 @@
         <div class="result-title">
             <p>RESULTADO</p>
         </div>
-        <div *ngFor="let remark of this.answerService.answer.remarks">
+        <div *ngFor="let remark of remarks">
             <div class="card card-remark">
                 <div class="card-header header-remark">
                     {{remark.title}}
@@ -83,8 +83,14 @@
                 </div>
             </div>
         </div>
-        <a (click)="closeResult()" class="btn btn-xl ">¡Gracias!</a>
-
+        <div class="row justify-content-md-center">
+            <div class="col-md-2 col-12">
+                <a (click)="closeResult()" class="btn btn-xl ">¡Adios!</a>
+            </div>
+            <div class="offset-md-1 col-md-2 col-12">
+                <a (click)="downloadResult()" class="btn btn-xl ">Descargar</a>
+            </div>
+        </div>
         <!-- <div class="message-text">
             <p>{{currentMessage.text}}</p>
         </div> -->

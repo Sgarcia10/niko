@@ -9,6 +9,7 @@ const questionService = require('../services/question.service');
 const projectService = require('../services/project.service');
 const answerService = require('../services/answer.service');
 const surveyService = require('../services/survey.service');
+const dashboardService = require('../services/dashboard.service');
 
 /* GET api listing. */
 router.get('/', (req, res) => {
@@ -81,13 +82,17 @@ router.put('/admin/questions/update', questionService.update);
 router.delete('/admin/questions/:_id,:pos', questionService.delete);
 router.get('/admin/questions/', questionService.getAll);
 router.get('/admin/questions/:_id', questionService.getById);
-router.get('/admin/questions/pos/:pos', questionService.getByPos);
+
+router.get('/admin/dashboard/questions/:idSurvey', dashboardService.getQuestions);
+
+router.get('/user/questions/pos/:pos,:idSurvey', questionService.getByPos);
 
 router.post('/user/projects/create', projectService.create);
-router.get('/user/projects/:_id', projectService.getByUserId);
+router.get('/user/projects/user/:_id', projectService.getByUserId);
 router.get('/user/projects/activeSurvey', projectService.getActiveSurvey);
 router.delete('/user/projects/:_id', projectService.delete);
 
 router.post('/user/answer/create', answerService.create);
+router.get('/user/answer/remarks/:idProject', answerService.getResult);
 
 module.exports = router;

@@ -29,6 +29,14 @@ var user = new mongoose.Schema({
 });
 
 var projectSchema = new mongoose.Schema({
+    idSurvey : {
+      type: String,
+      required: true
+    },
+    currentQuestionPos : {
+      type: Number,
+      required: true
+    },
     title : {
       type: String,
       required: true

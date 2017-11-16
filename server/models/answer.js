@@ -1,41 +1,5 @@
 var mongoose = require( 'mongoose' );
 
-var optionAnswered = new mongoose.Schema({
-    _id : {
-      type : String,
-      required: true
-    },
-    text: {
-      type : String,
-      required: true
-    },
-    checked: {
-      type : Boolean,
-      required: true
-    },
-    ans: {
-      type : String,
-      default : ""
-    }
-});
-
-var questionAsked = new mongoose.Schema({
-    _id : false,
-    idQuestion : {
-      type : String,
-      required: true
-    },
-    title: {
-      type : String,
-      required: true
-    },
-    type: {
-      type : Boolean,
-      required: true
-    },
-    optionsAnswered: [optionAnswered]
-});
-
 var downloadURL = new mongoose.Schema({
   name: {
     type: String,
@@ -56,18 +20,55 @@ var message = new mongoose.Schema({
     downloadURL: downloadURL,
 });
 
-var answerSchema = new mongoose.Schema({
-    idProject : {
+
+var optionAnswered = new mongoose.Schema({
+    _id : {
       type : String,
       required: true
     },
-    currentPos : {
+    text: {
+      type : String,
+      default : ""
+    },
+    checked: {
+      type : Boolean,
+      required: true
+    },
+    ans: {
+      type : String,
+      default : ""
+    }
+});
+
+var questionAnswered = new mongoose.Schema({
+    posQuestion : {
       type : Number,
       required: true
     },
-    questionsAsked: [questionAsked],
+    idSurvey: {
+      type : String,
+      required: true
+    },
+    idProject: {
+      type : String,
+      required: true
+    },
+    prevPos : {
+      type : Number,
+      required: true
+    },
+    title: {
+      type : String,
+      required: true
+    },
+    type: {
+      type : String,
+      required: true
+    },
+    optionsAnswered: [optionAnswered],
     remarks: [message]
 });
 
 
-module.exports = mongoose.model('Answer', answerSchema);
+
+module.exports = mongoose.model('QuestionAnswered', questionAnswered);

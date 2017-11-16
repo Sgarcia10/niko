@@ -1,4 +1,58 @@
-<p>
-  dashboard works!
-  
-</p>
+<div>
+    <form name="form" class="form-dashboard"   novalidate>
+        <div class="form-group">
+            <select class="form-control select-dashboard" required
+            (change)="loadQuestions()"
+            [(ngModel)] = "currentSurveyId" name="survey" #survey="ngModel">
+              <option value="" disabled selected hidden>Escoge la encuesta</option>
+              <option class="select-option" *ngFor="let survey of surveys"
+                  [value]="survey._id" >
+                  {{survey.name}}
+              </option>
+            </select>
+            <div *ngIf="survey.invalid && (survey.dirty || survey.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="survey.errors.required">
+                Selecciona una encuesta
+              </div>
+
+            </div>
+        </div>
+        <div *ngIf="currentSurveyId" class="form-group">
+            <mat-radio-group class="example-radio-group" [(ngModel)]="currentQuestionId" name="questions-group">
+                <mat-radio-button class="example-radio-button" *ngFor="let question of questions"
+                  [value]="question._id">
+                  {{question.title}}
+                </mat-radio-button>
+            </mat-radio-group>
+            <!-- <select class="form-control select-dashboard" required
+            [(ngModel)] = "currentQuestionId" name="question"  #question="ngModel">
+              <option value="" disabled selected hidden>Escoge la pregunta</option>
+              <option class="select-option" *ngFor="let question of questions"
+                  [value]="question.id" >
+                {{question.title}}
+              </option>
+            </select>
+            <div *ngIf="question.invalid && (question.dirty || question.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="question.errors.required">
+                Selecciona una pregunta
+              </div>
+
+            </div> -->
+        </div>
+        <!-- <div class="row">
+            <div class="col">
+                <label class="col-form-label text-periodo">Año:</label>
+            </div>
+            <div class="col col-year">
+                <input type="number" class="form-control input-year" size="4" min="1990"
+                [max]="this.year" step="1"
+                [(ngModel)] = "currentProject.period.year" name="year" />
+            </div>
+        </div> -->
+        <div class="add-category">
+            <a (click)="downloadSurveyAnswer()" class="btn add-category-button">Descargar</a>
+        </div>
+    </form>
+</div>

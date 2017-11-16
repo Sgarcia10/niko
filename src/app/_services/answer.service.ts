@@ -3,22 +3,35 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import { Answer } from '../_models/index';
+import { QuestionAnswered, Question } from '../_models/index';
 
 @Injectable()
 export class AnswerService {
 
-    public answer: Answer = null;
+    private questionAnswered: QuestionAnswered = null;
 
     constructor(private http: Http) { }
 
-    getById(_id: string) {
+    public getById(_id: string) {
         return this.http.get('api/admin/questions/' + _id).map((response: Response) => response.json());
     }
 
-    create() {
-        return this.http.post('api/user/answer/create', this.answer)
+    public create() {
+        return this.http.post('api/user/answer/create', this.questionAnswered)
           .map((response: Response) => response.json());
+    }
+
+    public getResult(idSurvey: string) {
+        return this.http.get('api/user/answer/remarks/'+idSurvey)
+          .map((response: Response) => response.json());
+    }
+
+    public getQuestionAnswered(){
+      return this.questionAnswered;
+    }
+
+    public setQuestionAnswered(q: QuestionAnswered){
+      this.questionAnswered = q;
     }
 
     // update(question: QuestionDetail) {

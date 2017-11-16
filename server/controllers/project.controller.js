@@ -16,7 +16,6 @@ exports.create = function(p){
 }
 
 exports.getByUserId = function(id){
-
     var deferred = Q.defer();
     Project.find({"user.userId": id}, (err, doc)=>{
       if(err) deferred.reject(err);
@@ -29,23 +28,20 @@ exports.getByUserId = function(id){
 }
 
 exports.getActiveSurvey = function(){
-    return Survey.findOne({'active' : true}, '_id').lean().exec();
+    var deferred = Q.defer();
+    Survey.findOne({'active' : true}, '_id', (err, doc)=> {
+        if (err) deferred.reject(err);
+        if (doc) deferred.resolve(doc);
+    });
+    return deferred.promise;
 }
 
 exports.delete = function(id){
     var deferred = Q.defer();
-    Project.findByIdAndRemove(id, (err, doc)=>{
-      if(err) deferred.reject(err);
-      if(doc) {
-        Answer.findOneAndRemove({'idProject': id}, (err1, doc1)=>{
-          if(err1) deferred.reject(err1);
-          if(doc1) {
-            deferred.resolve(doc);
-          }
-        });
-        deferred.resolve(doc);
-      }
+    var promise1 = Project.findByIdAndRemove(id).exec();
+    var promise2 = promise1.then(()=>{
+      return Answer.remove({'idProject': id}).lean().exec()
     });
 
-    return deferred.promise;
+    return promise2;
 }

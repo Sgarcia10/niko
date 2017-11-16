@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSelectModule, MatRadioModule } from '@angular/material';
 
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -12,7 +13,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SurveyComponent } from './survey/survey.component';
 
 import { CategoryService, DialogService, QuestionService,
-    SurveyService} from '../_services/index';
+    SurveyService, DashboardService} from '../_services/index';
 import { QuestionComponent } from './question/question.component';
 import { FindComponent } from './find/find.component';
 
@@ -20,7 +21,9 @@ import { FindComponent } from './find/find.component';
   imports: [
     CommonModule,
     FormsModule,
-    AdminRoutingModule
+    AdminRoutingModule,
+    MatSelectModule,
+    MatRadioModule
   ],
   declarations: [
     AdminComponent,
@@ -35,7 +38,8 @@ import { FindComponent } from './find/find.component';
     DialogService,
     CategoryService,
     QuestionService,
-    SurveyService
+    SurveyService,
+    DashboardService
   ]
 })
 

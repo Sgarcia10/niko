@@ -70,9 +70,9 @@ exports.update = function(question){
 
 }
 
-exports.getById = function(id){
+exports.getById = function(id, idSurvey){
     var deferred = Q.defer();
-    return Question.findById(id, (err, doc)=>{
+    return Question.find(id, (err, doc)=>{
       if (doc){
         deferred.resolve(doc);
       }
@@ -86,9 +86,9 @@ exports.getAll = function(){
     return Question.find({}).exec();
 }
 
-exports.getByPos = function(pos){
+exports.getByPos = function(pos, idSurvey){
   var deferred = Q.defer();
-  Category.findOne({"questions.pos": pos}, {"_id":0,"questions" : {$elemMatch: {"pos" :pos}}}, (err1, doc1) =>{
+  Category.findOne({"questions.pos": pos, 'idSurvey': idSurvey}, {"_id":0,"questions" : {$elemMatch: {"pos" :pos}}}, (err1, doc1) =>{
     if(err1) deferred.reject(err1);
     else if(doc1){
       Question.findById(doc1.questions[0].idQuestion, (err2, doc2) =>{

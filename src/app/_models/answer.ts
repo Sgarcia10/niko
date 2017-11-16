@@ -1,21 +1,16 @@
 import {  Message } from './question';
-export class Answer {
+
+export class QuestionAnswered {
     constructor(
         public _id: string,
-        public idSurvey,
+        public posQuestion: number,
+        public idSurvey: string,
         public idProject: string,
-        public currentPos: number,
-        public questionsAsked: QuestionAsked [],
-        public remarks: Message []
-    ){}
-}
-
-export class QuestionAsked {
-    constructor(
-        public idQuestion: string,
+        public prevPos: number,
         public title: string,
         public type: string,
-        public optionsAnswered: OptionAnswered []
+        public optionsAnswered: OptionAnswered [],
+        public remarks: Message []
     ){}
 }
 
