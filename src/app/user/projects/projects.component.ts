@@ -88,7 +88,7 @@ export class ProjectsComponent implements OnInit {
         data => {
             const idSurvey = this.currentProject.idSurvey;
             this.answerService.setQuestionAnswered(
-              new QuestionAnswered('', 1, idSurvey, data._id, 0, '', '', [], []));
+              new QuestionAnswered('', 1, '', idSurvey, data._id, 0, '', '', [], []));
             this.router.navigate(['./question'], { relativeTo: this.route });
         },
         err => {
@@ -105,7 +105,7 @@ export class ProjectsComponent implements OnInit {
             survey = data;
             if (survey){
               this.newProject = true;
-              this.currentProject = new Project('', survey._id, 1, '', '', '', 'individual', '',
+              this.currentProject = new Project('', survey._id, '', '', '', '', 'individual', '',
                 new Period(2018, 1), '', this.currentUser);
               window.scrollTo(0, 0);
             }
@@ -139,6 +139,24 @@ export class ProjectsComponent implements OnInit {
   }
 
   private continue(i){
+    const p = this.projects[i];
+    if (p.currentAnswerId){
+      this.projectService.continue( p.currentAnswerId).subscribe(
+        answer=>{
+            this.answerService.setQuestionAnswered(answer);
+            this.router.navigate(['./question'], { relativeTo: this.route });
+        },
+        err => {
+            this.alertService.error(err);
+        }
+      );
+    }
+    else {
+      const idSurvey = p.idSurvey;
+      this.answerService.setQuestionAnswered(
+        new QuestionAnswered('', 1, '', idSurvey, p._id, 0, '', '', [], []));
+      this.router.navigate(['./question'], { relativeTo: this.route });
+    }
   }
 
 }

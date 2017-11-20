@@ -1,12 +1,12 @@
 var mongoose = require('mongoose');
 var dbURI = process.env.MONGODB_URI || require('./config.json').connectionURI;
 
-mongoose.Promise = global.Promise;
-
 mongoose.connect(dbURI, {
   useMongoClient: true,
   /* other options */
 });
+
+mongoose.Promise = global.Promise;
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {

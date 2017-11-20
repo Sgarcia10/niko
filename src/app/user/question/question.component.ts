@@ -52,16 +52,16 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.getMargin();
     if (this.answerService.getQuestionAnswered()){
       this.available = false;
       this.height = window.innerHeight;
       this.isShowResult = false;
       this.isShowMessage = false;
-      this.optionsAnswered = [];
       this.remarks = [];
       this.currentQuestionAnswered = this.answerService.getQuestionAnswered();
+      this.optionsAnswered = this.currentQuestionAnswered.optionsAnswered;
       this.loadCurrentQuestion();
-      this.getMargin();
     }
     else  this.router.navigate(['../'], { relativeTo: this.route });
   }
@@ -90,7 +90,9 @@ export class QuestionComponent implements OnInit, AfterViewInit {
             if (!(data==='')){
               let question: Question = data;
               this.currentQuestion = question;
-              this.loadAnswer();
+              if (this.currentQuestionAnswered.optionsAnswered.length === 0){
+                this.loadAnswer();
+              }
               this.available = true;
             }
             else{
@@ -118,6 +120,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
           }
       }
 
+      this.currentQuestionAnswered.idQuestion = this.currentQuestion._id;
       this.currentQuestionAnswered.title = this.currentQuestion.title;
       this.currentQuestionAnswered.type = this.currentQuestion.type;
       this.currentQuestionAnswered.optionsAnswered = this.optionsAnswered;
@@ -150,7 +153,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
     this.answerService.setQuestionAnswered(this.currentQuestionAnswered);
     this.answerService.create().subscribe(
       data => {
-        this.currentQuestionAnswered = new QuestionAnswered('', nextPos,
+        this.currentQuestionAnswered = new QuestionAnswered('', nextPos, '',
         idSurvey, idProject, currentPos, '', '', [], []);
         if (nextPos>1) this.getResult();
         else this.loadCurrentQuestion();
@@ -236,8 +239,12 @@ export class QuestionComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private isTextArea(i){
+  private isTextArea(i): boolean{
     return this.currentQuestion.options[i].isTextArea;
+  }
+
+  private optionChecked(i): boolean{
+    return this.optionsAnswered[i].checked;
   }
 
   private isAbierta(){
@@ -249,21 +256,21 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   }
 
   private toggleSelect(i)  {
-    // let selected = this.currentQuestion.options[i].selected;
-    // if(selected)
-    //   this.currentQuestion.options[i].selected=false;
-    // else{
-    //   this.currentQuestion.options[i].selected=true;
-    //   if(this.currentQuestion.options[i].message)
-    //   {
-    //     this.currentMessage=this.currentQuestion.options[i].message;
-    //     this.showMessage();
-    //   }
-    // }
+    let checked: boolean = this.optionsAnswered[i].checked;
+    if (checked){
+      this.optionsAnswered[i].checked = false;
+    }
+    else{
+      this.optionsAnswered[i].checked = true;
+      if (this.currentQuestion.options[i].message)
+      {
+        this.currentMessage = this.currentQuestion.options[i].message;
+        this.isShowMessage = true;
+      }
+    }
   }
 
   private showMessage(){
-    this.isShowMessage = true;
   }
 
   private closeMessage(){

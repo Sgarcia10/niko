@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
   canLoad(route: Route): boolean {
     let url = `${route.path}`;
-    // console.log("loading"+url);
     return this.verifyRole(url);
   }
 

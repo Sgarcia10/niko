@@ -114,10 +114,10 @@
                         <div class="form-group  col-sm-9">
                             <div  class="option-text">
                                 {{option.text}}
-                           </div>
-                              <!-- <div *ngIf="'formErrors.optionText'+j" class="alert alert-danger">
-                                  {{ formErrors.option }}
-                              </div> -->
+                            </div>
+                            <!-- <div *ngIf="'formErrors.optionText'+j" class="alert alert-danger">
+                                {{ formErrors.option }}
+                            </div> -->
                         </div>
                         <div class="col col-sm-1 btn-option">
                               <a id="edit-option-button" class="btn btn-primary question-button"(click)="editOption(j)">
@@ -166,14 +166,14 @@
                         <div class="form-group">
                             <label for="titleMessage">Titulo</label>
                             <input type="text" class="form-control" name="'titleMessage'+j"
-                            value="{{option.message.title}}" placeholder="Titulo">
+                            value="{{option.message.title}}" placeholder="Titulo" [(ngModel)]="option.message.title">
                         </div>
                         <div class="form-group">
                             <label for="textMessage">Mensaje:</label>
-                            <textarea class="form-control" rows="3" name="'textMessage'+j"
-                              > {{option.message.text}} </textarea>
+                            <textarea class="form-control" rows="3" name="'textMessage'+j" [(ngModel)]="option.message.text"
+                              ></textarea>
                         </div>
-                        <div class="row row-download">
+                        <!-- <div class="row row-download">
                                 <button  *ngIf="!option.message.downloadURL" class="btn btn-primary col"
                                 type="button" (click)="downloadURL(j)">Agregar Archivo</button>
                                 <div *ngIf="option.message.downloadURL" class="form-group col-sm-12">
@@ -181,7 +181,7 @@
                                     <input  type="text" class="form-control" name="'textUploadURL'+j"
                                     [(ngModel)]="option.message.downloadURL.name" placeholder="Nombre del archivo">
                                 </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

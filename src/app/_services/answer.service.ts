@@ -22,7 +22,7 @@ export class AnswerService {
     }
 
     public getResult(idSurvey: string) {
-        return this.http.get('api/user/answer/remarks/'+idSurvey)
+        return this.http.get('api/user/answers/remarks/'+idSurvey)
           .map((response: Response) => response.json());
     }
 

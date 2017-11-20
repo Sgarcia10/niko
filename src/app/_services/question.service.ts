@@ -15,7 +15,7 @@ export class QuestionService {
     constructor(private http: Http) { }
 
     getById(_id: string) {
-        return this.http.get('api/admin/questions/' + _id).map((response: Response) => response.json());
+        return this.http.get('api/admin/question/' + _id).map((response: Response) => response.json());
     }
 
     getByPos(pos: number, idSurvey: string) {

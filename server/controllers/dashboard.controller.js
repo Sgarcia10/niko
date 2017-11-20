@@ -9,6 +9,10 @@ exports.getQuestions = function(idSurvey){
     return Question.find({'idSurvey': idSurvey}, 'title').lean().exec();
 }
 
+exports.stats = function(idQuestion, idSurvey){
+    return Answer.find({'idQuestion': idQuestion, 'idSurvey': idSurvey}, 'title optionsAnswered').lean().exec();
+}
+
 // exports.getByUserId = function(id){
 //     var deferred = Q.defer();
 //     Project.find({"user.userId": id}, (err, doc)=>{

@@ -40,7 +40,7 @@ exports.delete = function(id){
     var deferred = Q.defer();
     var promise1 = Project.findByIdAndRemove(id).exec();
     var promise2 = promise1.then(()=>{
-      return Answer.remove({'idProject': id}).lean().exec()
+      return Answer.deleteMany({'idProject': id}).lean().exec()
     });
 
     return promise2;

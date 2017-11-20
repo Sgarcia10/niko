@@ -47,10 +47,20 @@ select:invalid{
   box-shadow: 0px 10px 5px #8e8e8e;
 }
 
-.example-radio-button{
-  border-color: rgb(234, 244, 45);
+.question-text{
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: justify;
+  padding: 0;
+  max-width: auto;
+  word-wrap: break-word;
+  /*min-height: 55px;*/
 }
 
-.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
-    border-color: #ffc940;
+.separator{
+  width: 100%;
+  border-top-style: groove;
+  border-width: 2px;
+  border-color: rgba(231, 230, 235, 0.6);
 }

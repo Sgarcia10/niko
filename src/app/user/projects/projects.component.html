@@ -8,7 +8,7 @@
               <h2>Proyectos:</h2>
           </div>
           <div class="row card-header" *ngFor="let project of projects; let i = index">
-              <div class="col-11 project-name">
+              <div class="col-11 project-name" (click)="continue(i)">
                 {{project.title}}
               </div>
               <div class="col-1 project-delete">

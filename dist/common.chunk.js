@@ -22,9 +22,10 @@ var types = [
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return QuestionAnswered; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return OptionAnswered; });
 var QuestionAnswered = (function () {
-    function QuestionAnswered(_id, posQuestion, idSurvey, idProject, prevPos, title, type, optionsAnswered, remarks) {
+    function QuestionAnswered(_id, posQuestion, idQuestion, idSurvey, idProject, prevPos, title, type, optionsAnswered, remarks) {
         this._id = _id;
         this.posQuestion = posQuestion;
+        this.idQuestion = idQuestion;
         this.idSurvey = idSurvey;
         this.idProject = idProject;
         this.prevPos = prevPos;
@@ -145,10 +146,10 @@ var CategoryFull = (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Period; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return UserProject; });
 var Project = (function () {
-    function Project(_id, idSurvey, currentQuestionPos, title, adviser, subject, activity, type, period, program, user) {
+    function Project(_id, idSurvey, currentAnswerId, title, adviser, subject, activity, type, period, program, user) {
         this._id = _id;
         this.idSurvey = idSurvey;
-        this.currentQuestionPos = currentQuestionPos;
+        this.currentAnswerId = currentAnswerId;
         this.title = title;
         this.adviser = adviser;
         this.subject = subject;

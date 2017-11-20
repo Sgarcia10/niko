@@ -19,4 +19,8 @@ export class DashboardService {
         return this.http.get('api/admin/dashboard/questions/'+idSurvey).map((response: Response) => response.json());
     }
 
+    public getStats(idQuestion: string, idSurvey: string) {
+        return this.http.get('api/admin/dashboard/stats/'+idQuestion+','+idSurvey).map((response: Response) => response.json());
+    }
+
 }

@@ -34,6 +34,10 @@ export class ProjectService {
         return this.http.delete('api/user/projects/'+_id);
     }
 
+    continue(idAnswer: string) {
+        return this.http.get('api/user/answer/' + idAnswer).map((response: Response) => response.json());
+    }
+
     // update(question: QuestionDetail) {
     //     return this.http.put('api/admin/questions/update', question);
     // }

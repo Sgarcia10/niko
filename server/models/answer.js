@@ -45,6 +45,10 @@ var questionAnswered = new mongoose.Schema({
       type : Number,
       required: true
     },
+    idQuestion: {
+      type : String,
+      required: true
+    },
     idSurvey: {
       type : String,
       required: true

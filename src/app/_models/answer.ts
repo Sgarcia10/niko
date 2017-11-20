@@ -4,6 +4,7 @@ export class QuestionAnswered {
     constructor(
         public _id: string,
         public posQuestion: number,
+        public idQuestion: string,
         public idSurvey: string,
         public idProject: string,
         public prevPos: number,

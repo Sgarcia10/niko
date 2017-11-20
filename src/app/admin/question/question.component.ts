@@ -87,8 +87,8 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
     if (questionBasic)
     {
       this.pos = questionBasic.pos;
+      this.currentQuestion = this.service.getQuestion();
       if (this.service.getQuestion()){
-        this.currentQuestion = this.service.getQuestion();
         this.update = true;
       }
       else

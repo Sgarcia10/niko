@@ -6,9 +6,6 @@ var _ = require('lodash');
 var Q = require('q');
 var Question = require('../models/question');
 var Category = require('../models/category');
-// var Option = require('../models/question');
-// var Message = require('../models/question');
-// var DownloadURL = require('../models/question');
 
 exports.create = function(questionBasic, question){
     var q = _.omit(question, ['_id', 'help._id', 'options.message._id']);
@@ -70,16 +67,8 @@ exports.update = function(question){
 
 }
 
-exports.getById = function(id, idSurvey){
-    var deferred = Q.defer();
-    return Question.find(id, (err, doc)=>{
-      if (doc){
-        deferred.resolve(doc);
-      }
-      if(err){
-         deferred.reject(err);
-     }
-    });
+exports.getById = function(id){
+    return Question.findById(id).lean().exec();
 }
 
 exports.getAll = function(){

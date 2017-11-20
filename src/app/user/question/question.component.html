@@ -1,6 +1,6 @@
 <div class="container-cover" [style.min-height.px]="height" >
 <div class="container container-full" >
-<div class="container container-question" #containerQuestion [style.margin-top.px]="getMargin()">
+<div class="container container-question">
     <div  *ngIf="available && !isShowMessage && !isShowResult" >
         <div class="row">
             <div class="col-lg col-md-12">
@@ -18,13 +18,15 @@
                         <div class="row">
                             <div class="col form-check" >
                                 <label class="form-check-label">
-                                    <input [type]="tipoOpcion(i)" cheked="false"
-                                    (change)="(option.checked)?option.checked=false:option.checked=true"
+                                    <input [type]="tipoOpcion(i)" [checked]="option.checked"
+                                    (change)="toggleSelect(i)"
                                     class="form-check-input" name="tipo">
                                     {{option.text}}
                                 </label>
-                                <textarea class="text-area" *ngIf="isTextArea(i) && option.checked" rows="4" [(ngModel)]="option.answer">
-                                </textarea>
+                                <div  *ngIf="isTextArea(i) && optionChecked(i)">
+                                  <textarea class="text-area" rows="4" [(ngModel)]="option.ans">
+                                  </textarea>
+                                </div>
                             </div>
                             <div *ngIf="option.help" class="col-1">
                             </div>
@@ -64,9 +66,6 @@
             <p>{{currentMessage.text}}</p>
         </div>
         <a (click)="closeMessage()" class="btn btn-xl ">Entendido!</a>
-        <!-- <div class="message-text">
-            <p>{{currentMessage.text}}</p>
-        </div> -->
     </div>
 
     <div *ngIf="!isShowMessage && isShowResult">

@@ -81,9 +81,10 @@ router.post('/admin/questions/create', questionService.create);
 router.put('/admin/questions/update', questionService.update);
 router.delete('/admin/questions/:_id,:pos', questionService.delete);
 router.get('/admin/questions/', questionService.getAll);
-router.get('/admin/questions/:_id', questionService.getById);
+router.get('/admin/question/:_id', questionService.getById);
 
 router.get('/admin/dashboard/questions/:idSurvey', dashboardService.getQuestions);
+router.get('/admin/dashboard/stats/:idQuestion,:idSurvey', dashboardService.stats);
 
 router.get('/user/questions/pos/:pos,:idSurvey', questionService.getByPos);
 
@@ -93,6 +94,7 @@ router.get('/user/projects/activeSurvey', projectService.getActiveSurvey);
 router.delete('/user/projects/:_id', projectService.delete);
 
 router.post('/user/answer/create', answerService.create);
-router.get('/user/answer/remarks/:idProject', answerService.getResult);
+router.get('/user/answers/remarks/:idProject', answerService.getResult);
+router.get('/user/answer/:_id', answerService.getById);
 
 module.exports = router;

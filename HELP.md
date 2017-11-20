@@ -10,6 +10,8 @@ kill -9 <pid>
 #see process and uses of memory
 ps aux --sort -rss
 
+#DB mlab
+"connectionURI": "mongodb://sgarcia10:electro.2011@ds257485.mlab.com:57485/niko"
 
 #git
 git push -u laptop master

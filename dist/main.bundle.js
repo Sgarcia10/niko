@@ -142,7 +142,6 @@ var AuthGuard = (function () {
     };
     AuthGuard.prototype.canLoad = function (route) {
         var url = "" + route.path;
-        // console.log("loading"+url);
         return this.verifyRole(url);
     };
     AuthGuard.prototype.verifyRole = function (url) {
@@ -380,7 +379,7 @@ var AnswerService = (function () {
             .map(function (response) { return response.json(); });
     };
     AnswerService.prototype.getResult = function (idSurvey) {
-        return this.http.get('api/user/answer/remarks/' + idSurvey)
+        return this.http.get('api/user/answers/remarks/' + idSurvey)
             .map(function (response) { return response.json(); });
     };
     AnswerService.prototype.getQuestionAnswered = function () {
@@ -538,6 +537,9 @@ var DashboardService = (function () {
     DashboardService.prototype.getQuestions = function (idSurvey) {
         return this.http.get('api/admin/dashboard/questions/' + idSurvey).map(function (response) { return response.json(); });
     };
+    DashboardService.prototype.getStats = function (idQuestion, idSurvey) {
+        return this.http.get('api/admin/dashboard/stats/' + idQuestion + ',' + idSurvey).map(function (response) { return response.json(); });
+    };
     DashboardService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]])
@@ -669,6 +671,9 @@ var ProjectService = (function () {
     ProjectService.prototype.delete = function (_id) {
         return this.http.delete('api/user/projects/' + _id);
     };
+    ProjectService.prototype.continue = function (idAnswer) {
+        return this.http.get('api/user/answer/' + idAnswer).map(function (response) { return response.json(); });
+    };
     ProjectService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["c" /* Http */]])
@@ -708,7 +713,7 @@ var QuestionService = (function () {
         this.currentSurvey = null;
     }
     QuestionService.prototype.getById = function (_id) {
-        return this.http.get('api/admin/questions/' + _id).map(function (response) { return response.json(); });
+        return this.http.get('api/admin/question/' + _id).map(function (response) { return response.json(); });
     };
     QuestionService.prototype.getByPos = function (pos, idSurvey) {
         return this.http.get('api/user/questions/pos/' + pos + ',' + idSurvey).map(function (response) { return response.json(); });
@@ -1384,7 +1389,7 @@ module.exports = __webpack_require__.p + "logout.63f73f2e480c638bde07.svg";
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
-    production: true
+    production: false
 };
 
 

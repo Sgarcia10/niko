@@ -33,9 +33,8 @@ var projectSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    currentQuestionPos : {
-      type: Number,
-      required: true
+    currentAnswerId : {
+      type: String
     },
     title : {
       type: String,

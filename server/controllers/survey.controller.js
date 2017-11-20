@@ -45,13 +45,19 @@ exports.delete = function(id)
 
 exports.activate = function(id, currentActive)
 {
-    var promise1 = Survey.updateMany({},{$set : {'active' : false}}).exec();
+    var promise1 = Survey.updateMany({'active' : true},{$set : {'active' : false}}).exec();
     var promise2 = Survey.findByIdAndUpdate(id, {$set : {'active' : true}}).exec();
 
-    if(currentActive)
-      return promise1;
-    else
-      return promise1.then(promise2);
+    if(currentActive==='false'){
+        return promise1;
+    }
+    else{
+      return promise1.then(()=>{
+        return promise2.then(()=>{
+          return Promise.resolve(true);
+        });
+      });
+    }
 }
 
 exports.finish = function(id)

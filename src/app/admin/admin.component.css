@@ -1,7 +1,11 @@
 .container-cover{
-  	background: url(../../assets/bg-pattern.png),#b66d21;
+  	/*background: url(../../assets/bg-pattern.png),#b66d21;
   	background: url(../../assets/bg-pattern.png),-webkit-linear-gradient(to left,#b66d21,#500909);
-  	background: url(../../assets/bg-pattern.png),linear-gradient(to right,#b66d21,#99401f);
+  	background: url(../../assets/bg-pattern.png),linear-gradient(to right,#b66d21,#99401f);*/
+    background: url(../../assets/bg-pattern.png),#c21b7f;
+    background: url(../../assets/bg-pattern.png),-moz-linear-gradient(left, #c21b7f 0%, #cc2525 100%);
+    background: url(../../assets/bg-pattern.png),-webkit-linear-gradient(left, #c21b7f 0%, #cc2525 100%);
+    background: url(../../assets/bg-pattern.png),linear-gradient(to right, #c21b7f 0%, #cc2525 100%);
 }
 
 .card-block{

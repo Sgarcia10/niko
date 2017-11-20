@@ -14,6 +14,12 @@ exports.getResult = function(req, res){
       .catch(err => res.status(400).send('No se encuentran las respeustas: '+err));
 }
 
+exports.getById = function(req, res){
+    answerController.getById(req.params._id)
+      .then(ans => res.send(ans))
+      .catch(err => res.status(400).send('No se encuentran las respeustas: '+err));
+}
+
 // exports.getByUserId = function(req, res){
 //     projectController.getByUserId(req.params._id)
 //       .then(projects => res.send(projects))

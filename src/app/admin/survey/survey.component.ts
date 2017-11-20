@@ -146,7 +146,8 @@ export class SurveyComponent implements OnInit {
   private activate(i)
   {
       const survey: Survey = this.surveys[i];
-      this.surveyService.activate(survey._id, survey.active).subscribe(
+      let active = (survey.active)? false: true;
+      this.surveyService.activate(survey._id, active).subscribe(
         sur => {
           this.loadAllSurveys();
         },
@@ -255,7 +256,7 @@ export class SurveyComponent implements OnInit {
 
   private selectSurveyById(id){
     for (let s of this.surveys){
-      console.log(s._id);
+      // console.log(s._id);
       if (s._id === id){
         this.currentSurvey = s;
         this.loadCategoriesCurrentSurvey();

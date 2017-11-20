@@ -31,14 +31,34 @@ body {
 	color: #fff;
 }
 
-.loading{
-  position: relative;
+.loading-cover{
+  position: absolute;
+  top: 0;
+  left: 0;
+	background: url(./assets/bg-pattern.png),#141877;
+	background: url(./assets/bg-pattern.png),-webkit-linear-gradient(to left,#c0c0c7,#e0f6f3);
+	background: url(./assets/bg-pattern.png),linear-gradient(to right,#1c1c39,#1e443e);
+
+  /* Preserve aspet ratio */
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.loading-container{
+  position: inherit;
   top: 50%;
-  width: 120px;
-  height: 120px;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  width: 100%;
+  min-height: 10px;
+}
+
+.loading{
+  margin: auto;
+  top: 50%;
+  width: 120px;
+  height: 120px;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
   border-top: 16px solid #3498db;
