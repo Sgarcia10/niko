@@ -8,6 +8,7 @@
 
 .container-full{
   width: 100%;
+	min-height: 100%;
 }
 
 .question-title{
@@ -34,6 +35,12 @@
 .mover-btn{
 	min-width: 40px;
 	min-height: 40px;
+}
+
+.message{
+	position: inherit;
+  margin-top: 50%;
+  transform: translateY(-50%);
 }
 
 .message-title{

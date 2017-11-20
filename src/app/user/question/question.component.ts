@@ -19,7 +19,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   @ViewChild('containerQuestion') elementView: ElementRef;
   private currentQuestion: Question;
   private currentQuestionAnswered: QuestionAnswered;
-  private  height;
+  private height: number;
   private margin: number;
   private available: boolean;
   private isShowMessage: boolean;
@@ -41,24 +41,24 @@ export class QuestionComponent implements OnInit, AfterViewInit {
     {
         ngZone.run(() => {
             this.height = window.innerHeight;
-            let size = (this.height/2)-90;
-            if (this.elementView){
-              let sizeElem = this.elementView.nativeElement.offsetHeight/2;
-              if (sizeElem > size) this.margin = 0;
-              else this.margin = size-sizeElem;
-            }
+            // let size = (this.height/2)-90;
+            // if (this.elementView){
+            //   let sizeElem = this.elementView.nativeElement.offsetHeight/2;
+            //   if (sizeElem > size) this.margin = 0;
+            //   else this.margin = size-sizeElem;
+            // }
         });
     };
   }
 
   ngOnInit() {
-    this.getMargin();
     if (this.answerService.getQuestionAnswered()){
       this.available = false;
       this.height = window.innerHeight;
       this.isShowResult = false;
       this.isShowMessage = false;
       this.remarks = [];
+      this.margin = 50;
       this.currentQuestionAnswered = this.answerService.getQuestionAnswered();
       this.optionsAnswered = this.currentQuestionAnswered.optionsAnswered;
       this.loadCurrentQuestion();
@@ -72,13 +72,16 @@ export class QuestionComponent implements OnInit, AfterViewInit {
 
   private getMargin()
   {
-    let size = this.height/2-90;
+    let size = window.innerHeight/2-90;
     if (this.elementView){
       let sizeElem = this.elementView.nativeElement.offsetHeight/2;
-      if (sizeElem>size) return 0;
-      else return size-sizeElem;
+      // console.log('sizeElem: ' +sizeElem);
+      if (sizeElem>size) this.margin = 0;
+      else this.margin = size-sizeElem;
     }
-    return 0;
+    else this.margin = 0;
+    // console.log('size: ' +size);
+    // console.log('margin: '+ this.margin);
   }
 
 
@@ -93,6 +96,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
               if (this.currentQuestionAnswered.optionsAnswered.length === 0){
                 this.loadAnswer();
               }
+              this.getMargin();
               this.available = true;
             }
             else{
@@ -124,6 +128,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       this.currentQuestionAnswered.title = this.currentQuestion.title;
       this.currentQuestionAnswered.type = this.currentQuestion.type;
       this.currentQuestionAnswered.optionsAnswered = this.optionsAnswered;
+      this.getMargin();
   }
 
   private save(){
@@ -155,7 +160,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       data => {
         this.currentQuestionAnswered = new QuestionAnswered('', nextPos, '',
         idSurvey, idProject, currentPos, '', '', [], []);
-        if (nextPos>1) this.getResult();
+        if (nextPos>12) this.getResult();
         else this.loadCurrentQuestion();
       },
       err => {
@@ -167,20 +172,22 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   private jump(): number{
       let i = 0;
       let n = 0;
-      for (let option of this.optionsAnswered)
-      {
-        if (option.checked)
+      if (this.currentQuestionAnswered.type !== types[3].type && this.currentQuestionAnswered.type !== types[2].type){
+        for (let option of this.optionsAnswered)
         {
-          const message = this.currentQuestion.options[i].message;
-          const jump = this.currentQuestion.options[i].jump;
-          if (message){
-            this.currentQuestionAnswered.remarks.push(message);
+          if (option.checked)
+          {
+            const message = this.currentQuestion.options[i].message;
+            const jump = this.currentQuestion.options[i].jump;
+            if (message){
+              this.currentQuestionAnswered.remarks.push(message);
+            }
+            if (jump>n){
+              n = jump;
+            }
           }
-          if (jump>n){
-            n = jump;
-          }
+          i++;
         }
-        i++;
       }
       return this.currentQuestionAnswered.posQuestion + n + 1;
   }
@@ -264,17 +271,20 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       this.optionsAnswered[i].checked = true;
       if (this.currentQuestion.options[i].message)
       {
-        this.currentMessage = this.currentQuestion.options[i].message;
-        this.isShowMessage = true;
+        this.showMessage(i);
       }
     }
   }
 
-  private showMessage(){
+  private showMessage(i){
+    this.currentMessage = this.currentQuestion.options[i].message;
+    this.isShowMessage = true;
+    this.getMargin();
   }
 
   private closeMessage(){
     this.isShowMessage = false;
+    this.getMargin();
   }
 
 }

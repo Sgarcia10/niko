@@ -1,18 +1,18 @@
 <div class="container-cover" [style.min-height.px]="height" >
 <div class="container container-full" >
-<div class="container container-question">
+<div class="container container-question" #containerQuestion [style.margin-top.px]="margin">
     <div  *ngIf="available && !isShowMessage && !isShowResult" >
         <div class="row">
             <div class="col-lg col-md-12">
                 <div class="question-title">
                     <p>{{currentQuestion.title}}</p>
                 </div>
-                <!-- <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
+                <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
                     <div class="form-group">
                         <textarea class="form-control" name="name" rows="3"
-                        [(ngModel)]="currentQuestion.textArea" name="textArea"></textarea>
+                        [(ngModel)]="optionsAnswered[0].ans" name="textArea"></textarea>
                     </div>
-                </div> -->
+                </div>
                 <div *ngIf="!isAbierta()" class="respuesta-unica">
                     <div *ngFor="let option of optionsAnswered; let i = index">
                         <div class="row">
