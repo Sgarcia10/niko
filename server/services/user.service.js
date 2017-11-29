@@ -19,21 +19,9 @@ exports.authenticate = function(req, res){
         });
 }
 
-exports.verifyRole = function(req, res)
+exports.getRole = function(_id)
 {
-    userController.verifyRole(req.decoded._id)
-        .then( role => {
-            if (role) {
-                // authentication successful
-                res.send(role);
-            } else {
-                // authentication failed
-                res.status(400).send('Token invalid');
-            }
-        })
-        .catch(err => {
-            res.status(400).send(err);
-        });
+  return userController.getRole(_id);
 }
 
 //////////////////PRUEBAS////////////////////////////

@@ -84,6 +84,7 @@ export class ProjectsComponent implements OnInit {
 
   private saveProject()
   {
+      window.alert('Sus respuestas serán guardadas. Por lo tanto, puede salir y continuar cuando desee.');
       this.projectService.create(this.currentProject).subscribe(
         data => {
             const idSurvey = this.currentProject.idSurvey;
@@ -140,7 +141,7 @@ export class ProjectsComponent implements OnInit {
 
   private continue(i){
     const p = this.projects[i];
-    if (p.currentAnswerId){
+    if (p.currentAnswerId && p.currentAnswerId!=='-1'){
       this.projectService.continue( p.currentAnswerId).subscribe(
         answer=>{
             this.answerService.setQuestionAnswered(answer);
@@ -151,12 +152,24 @@ export class ProjectsComponent implements OnInit {
         }
       );
     }
+    else if (p.currentAnswerId && p.currentAnswerId==='-1'){
+      const idSurvey = p.idSurvey;
+      this.answerService.setQuestionAnswered(
+        new QuestionAnswered('', -1, '', idSurvey, p._id, 0, '', '', [], []));
+      this.router.navigate(['./question'], { relativeTo: this.route });
+    }
     else {
       const idSurvey = p.idSurvey;
       this.answerService.setQuestionAnswered(
         new QuestionAnswered('', 1, '', idSurvey, p._id, 0, '', '', [], []));
       this.router.navigate(['./question'], { relativeTo: this.route });
     }
+  }
+
+  private getColor(i){
+    const project = this.projects[i];
+    if (project.currentAnswerId === '-1') return 'rgba(100, 196, 16, 0.66)';
+    else return 'rgba(198, 149, 154, 0.5)';
   }
 
 }

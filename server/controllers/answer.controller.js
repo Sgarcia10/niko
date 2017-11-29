@@ -4,26 +4,42 @@ var Q = require('q');
 var QuestionAnswered = require('../models/answer');
 var Project = require('../models/project');
 
-exports.create = function(a){
+exports.create = function(ans){
     var questionAnswered = null;
     var promise1=null;
-    if(a._id){
-      questionAnswered = new QuestionAnswered(a);
-      console.log(a);
-      promise1 = QuestionAnswered.findByIdAndUpdate(a._id, a).exec();
+    if(ans._id){
+      questionAnswered = new QuestionAnswered(ans);
+      promise1 = QuestionAnswered.findByIdAndUpdate(ans._id, ans).exec();
     }
     else{
-      questionAnswered = new QuestionAnswered(_.omit(a,['_id']));
+      questionAnswered = new QuestionAnswered(_.omit(ans,['_id']));
       promise1 = questionAnswered.save();
     }
     var idAnswer = questionAnswered._id;
     var idProject= questionAnswered.idProject;
-    var promise2 = promise1.then(()=>{
+    return promise1.then(()=>{
       return Project.findByIdAndUpdate(
         idProject, { $set: { 'currentAnswerId': idAnswer }}
         ).lean().exec();
     });
-    return promise1;
+}
+
+exports.remove = function(id){
+    return QuestionAnswered.findByIdAndRemove(id).exec();
+}
+
+exports.getByPos = function(pos, idProject)
+{
+  return QuestionAnswered.findOne({'posQuestion': pos, 'idProject': idProject}).lean().exec()
+            .then((doc)=>{
+              var idAns = doc._id;
+              Project.findByIdAndUpdate(
+                idProject, { $set: { 'currentAnswerId': idAns }}, (err, doc1)=>{
+                  if(err) return Promise.reject(err);
+                  return Promise.resolve(doc);
+                });
+              return Promise.resolve(doc);
+            });
 }
 
 exports.getResult = function(idProject){

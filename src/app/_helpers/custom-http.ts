@@ -40,7 +40,10 @@ export class CustomHttp extends Http {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
         if (currentUser && currentUser.jwt) {
-            options.headers.append('Authorization', 'Bearer ' + currentUser.jwt);
+            options.headers.append('Authorization', 'NIKO&'
+            + currentUser.jwt
+            + '&' + currentUser._id
+            + '&' + currentUser.role);
         }
 
         return options;
@@ -49,6 +52,10 @@ export class CustomHttp extends Http {
     private handleError(error: any) {
         if (error.status === 401) {
             // 401 unauthorized response so log user out of client
+            window.location.href = '/';
+        }
+        if (error.status === 504) {
+            // 504 gateway timeoout
             window.location.href = '/';
         }
 

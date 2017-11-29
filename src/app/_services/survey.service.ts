@@ -27,7 +27,8 @@ export class SurveyService {
     }
 
     activate(_id: string, currenActive: boolean) {
-        return this.http.put('api/admin/surveys/activate/' + _id +',' + currenActive, {});
+        return this.http.put('api/admin/surveys/activate/' + _id +',' + currenActive, {})
+        .map((response: Response) => response.json());
     }
 
     finish(_id: string) {

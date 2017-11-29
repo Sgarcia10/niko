@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { UserComponent } from './user.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { CustomHttpProvider } from '../_helpers/custom-http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { PopoverModule } from 'ngx-popover';
 
@@ -16,6 +16,7 @@ import {  QuestionService, AnswerService, ProjectService, DialogService } from '
     CommonModule,
     PopoverModule,
     FormsModule,
+    ReactiveFormsModule,
     UserRoutingModule
   ],
   declarations: [

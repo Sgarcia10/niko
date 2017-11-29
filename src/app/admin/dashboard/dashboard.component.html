@@ -1,6 +1,6 @@
 <div class="container">
     <form name="form" class="form-dashboard"   novalidate>
-        <div *ngIf="currentSurveyId==''" class="form-group">
+        <!-- <div *ngIf="currentSurveyId==''" class="form-group">
             <select class="form-control select-dashboard" required
             (change)="loadQuestions()"
             [(ngModel)] = "currentSurveyId" name="survey" #survey="ngModel">
@@ -28,7 +28,7 @@
               </label>
               <div class="separator"></div>
           </div>
-        </div>
+        </div> -->
         <!-- <div class="row">
             <div class="col">
                 <label class="col-form-label text-periodo">Año:</label>
@@ -39,8 +39,18 @@
                 [(ngModel)] = "currentProject.period.year" name="year" />
             </div>
         </div> -->
-        <div *ngIf="isDownloadable" class="add-category">
+        <!-- <div *ngIf="isDownloadable" class="add-category">
             <a (click)="downloadSurveyAnswer()" class="btn add-category-button">Descargar</a>
+        </div> -->
+
+        <div class="add-category">
+            <a (click)="downloadAllAnswers()" class="btn add-category-button">Descargar Respuestas</a>
+        </div>
+        <div class="add-category">
+            <a (click)="downloadAllProjects()" class="btn add-category-button">Descargar Proyectos</a>
+        </div>
+        <div class="add-category">
+            <a (click)="downloadAllUsers()" class="btn add-category-button">Descargar Usuarios</a>
         </div>
     </form>
 </div>

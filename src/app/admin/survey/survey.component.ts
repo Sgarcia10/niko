@@ -146,13 +146,19 @@ export class SurveyComponent implements OnInit {
   private activate(i)
   {
       const survey: Survey = this.surveys[i];
-      let active = (survey.active)? false: true;
-      this.surveyService.activate(survey._id, active).subscribe(
-        sur => {
-          this.loadAllSurveys();
-        },
-        err => this.alertService.error(err)
-      );
+      if (survey.finished){
+        const active: boolean = (survey.active)? false: true;
+        this.surveyService.activate(survey._id, active).subscribe(
+          sur => {
+              this.surveys[i].active = sur.active;
+              console.log(this.surveys[i].active);
+          },
+          err => this.alertService.error(err)
+        );
+      }
+      else{
+        this.alertService.error('La encuesta no ha sido finalizada, por lo tanto, no se puede activar');
+      }
   }
 
   private finish(i)

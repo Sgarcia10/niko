@@ -51,6 +51,103 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  private downloadAllAnswers(){
+    this.dashboardService.getAllAnswers().subscribe(
+      ans => {
+        const answers: QuestionAnswered [] = ans;
+        if (answers==={}){
+          this.alertService.success('No hay respuestas a la pregunta seleccionada');
+        }
+        else {
+          let data = '';
+          data += 'Pregunta No&';
+          data += 'ID Encuesta&';
+          data += 'ID Proyecto&';
+          data += 'Títululo&';
+          data += 'Tipo&';
+          for (let i = 0; i<10; i++){
+            data += 'Id Respuesta&';
+            data += 'Texto Opcion&';
+            data += 'Seleccionada&';
+            data += 'Respuesta';
+            if (i<10) data+='&';
+          }
+          data += '\n';
+          for (let i = 0; i<answers.length; i++){
+            const answer = answers[i];
+            data += answer.posQuestion+'&';
+            data += answer.idSurvey+'&';
+            data += answer.idProject+'&';
+            data += answer.title+'&';
+            data += answer.type+'&';
+            for (let j = 0; j<answer.optionsAnswered.length; j++){
+              const optionAnswered = answer.optionsAnswered[j];
+              data+=optionAnswered._id+'&'+optionAnswered.text+'&'+optionAnswered.checked+'&'+optionAnswered.ans;
+              if (j<answer.optionsAnswered.length) data+='&';
+            }
+            if (i<answers.length) data+='\n';
+          }
+          let blob: Blob = new Blob([data], {type: 'text/csv'});
+          const currentTime = Date.now();
+          saveAs(blob, 'Answers'+currentTime+'.csv');
+        }
+      },
+      err => this.alertService.error(err)
+    );
+  }
+
+  private downloadAllProjects(){
+    this.dashboardService.getAllAnswers().subscribe(
+      ans => {
+        const answers: QuestionAnswered [] = ans;
+        if (answers.length===0){
+          this.alertService.success('No hay respuestas a la pregunta seleccionada');
+        }
+        else {
+          let data = '';
+          for (let i = 0; i<answers.length; i++){
+            const answer = answers[i];
+            for (let j = 0; j<answer.optionsAnswered.length; j++){
+              const optionAnswered = answer.optionsAnswered[j];
+              data+=optionAnswered._id+'&'+optionAnswered.checked+'&'+optionAnswered.ans;
+            }
+            if (i<answer.optionsAnswered.length) data+='\n';
+          }
+          let blob: Blob = new Blob([data], {type: 'text/csv'});
+          const currentTime = Date.now();
+          saveAs(blob, 'Answers'+currentTime+'.csv');
+        }
+      },
+      err => this.alertService.error(err)
+    );
+  }
+
+  private downloadAllUsers(){
+    this.dashboardService.getAllAnswers().subscribe(
+      ans => {
+        const answers: QuestionAnswered [] = ans;
+        if (answers.length===0){
+          this.alertService.success('No hay respuestas a la pregunta seleccionada');
+        }
+        else {
+          let data = '';
+          for (let i = 0; i<answers.length; i++){
+            const answer = answers[i];
+            for (let j = 0; j<answer.optionsAnswered.length; j++){
+              const optionAnswered = answer.optionsAnswered[j];
+              data+=optionAnswered._id+'&'+optionAnswered.checked+'&'+optionAnswered.ans;
+            }
+            if (i<answer.optionsAnswered.length) data+='\n';
+          }
+          let blob: Blob = new Blob([data], {type: 'text/csv'});
+          const currentTime = Date.now();
+          saveAs(blob, 'Answers'+currentTime+'.csv');
+        }
+      },
+      err => this.alertService.error(err)
+    );
+  }
+
   private downloadSurveyAnswer(){
     this.dashboardService.getStats(this.currentQuestionId, this.currentSurveyId).subscribe(
       ans => {
@@ -67,7 +164,7 @@ export class DashboardComponent implements OnInit {
             const answer = answers[i];
             for (let j = 0; j<answer.optionsAnswered.length; j++){
               const optionAnswered = answer.optionsAnswered[j];
-              data+=optionAnswered._id+';'+optionAnswered.checked+';'+optionAnswered.ans;
+              data+=optionAnswered._id+'&'+optionAnswered.checked+'&'+optionAnswered.ans;
             }
             if (i<answer.optionsAnswered.length) data+='\n';
           }

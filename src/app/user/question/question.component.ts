@@ -22,6 +22,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   private height: number;
   private margin: number;
   private available: boolean;
+  private isShowQuestion: boolean;
   private isShowMessage: boolean;
   private isShowResult: boolean;
   private currentMessage: Message = null;
@@ -57,11 +58,16 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       this.height = window.innerHeight;
       this.isShowResult = false;
       this.isShowMessage = false;
+      this.isShowQuestion = false;
       this.remarks = [];
       this.margin = 50;
       this.currentQuestionAnswered = this.answerService.getQuestionAnswered();
-      this.optionsAnswered = this.currentQuestionAnswered.optionsAnswered;
-      this.loadCurrentQuestion();
+      if (this.currentQuestionAnswered.posQuestion > 0){
+        this.loadCurrentQuestion();
+      }
+      else{
+        this.getResult();
+      }
     }
     else  this.router.navigate(['../'], { relativeTo: this.route });
   }
@@ -72,16 +78,17 @@ export class QuestionComponent implements OnInit, AfterViewInit {
 
   private getMargin()
   {
-    let size = window.innerHeight/2-90;
-    if (this.elementView){
-      let sizeElem = this.elementView.nativeElement.offsetHeight/2;
-      // console.log('sizeElem: ' +sizeElem);
-      if (sizeElem>size) this.margin = 0;
-      else this.margin = size-sizeElem;
-    }
-    else this.margin = 0;
-    // console.log('size: ' +size);
-    // console.log('margin: '+ this.margin);
+    setTimeout(() => {
+      let size = window.innerHeight/2-90;
+      if (this.elementView){
+        let sizeElem = this.elementView.nativeElement.offsetHeight/2;
+        // console.log('sizeElem: '+sizeElem);
+        if (sizeElem>size) this.margin = 0;
+        else this.margin = size-sizeElem;
+      }
+      else this.margin = 0;
+      this.available = true;
+    }, 0);
   }
 
 
@@ -96,8 +103,11 @@ export class QuestionComponent implements OnInit, AfterViewInit {
               if (this.currentQuestionAnswered.optionsAnswered.length === 0){
                 this.loadAnswer();
               }
+              else{
+                this.optionsAnswered = this.currentQuestionAnswered.optionsAnswered;
+              }
+              this.isShowQuestion = true;
               this.getMargin();
-              this.available = true;
             }
             else{
               this.getResult();
@@ -149,8 +159,8 @@ export class QuestionComponent implements OnInit, AfterViewInit {
 
   }
 
-  private siguiente(){
-    // this.available = false;
+  private next(){
+    this.isShowQuestion = false;
     let currentPos = this.currentQuestionAnswered.posQuestion;
     let nextPos = this.jump();
     let idProject = this.currentQuestionAnswered.idProject;
@@ -160,7 +170,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       data => {
         this.currentQuestionAnswered = new QuestionAnswered('', nextPos, '',
         idSurvey, idProject, currentPos, '', '', [], []);
-        if (nextPos>12) this.getResult();
+        if (nextPos>12) this.finishProject();
         else this.loadCurrentQuestion();
       },
       err => {
@@ -192,13 +202,60 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       return this.currentQuestionAnswered.posQuestion + n + 1;
   }
 
+  private back(){
+    this.isShowQuestion = false;
+    const id = this.currentQuestionAnswered._id;
+    const prevPos = this.currentQuestionAnswered.prevPos;
+    let idProject = this.currentQuestionAnswered.idProject;
+    if (id !== ''){
+      this.answerService.remove(id).subscribe(
+        data => {
+          this.loadAnswerByPos(prevPos, idProject);
+        },
+        err => {
+           this.alertService.error(err);
+        }
+      );
+    }
+    else{
+      this.loadAnswerByPos(prevPos, idProject);
+    }
+  }
+
+  private loadAnswerByPos(pos, idProject){
+    this.answerService.getByPos(pos, idProject).subscribe(
+      answer => {
+        this.currentQuestionAnswered = answer;
+        this.loadCurrentQuestion();
+      },
+      err => {
+         this.alertService.error(err);
+      }
+    );
+  }
+
+  private finishProject(){
+    const idProject = this.currentQuestionAnswered.idProject;
+    this.answerService.finishProject(idProject).subscribe(
+      data => {
+        // if (data._id==='-1') this.getResult();
+        // else this.alertService.error('Intente terminar mas tarde');
+        this.getResult();
+      },
+      err => {
+         this.alertService.error(err);
+      }
+    );
+  }
+
   private getResult(){
     const idProject = this.currentQuestionAnswered.idProject;
     this.answerService.getResult(idProject).subscribe(
       data => {
-        const finalMessage = new Message('', 'Esperamos que niko te haya ayudado.', null);
+        const finalMessage = new Message('Esperamos que Niko le haya ayudado.', '', null);
         this.remarks = data;
         this.remarks.push(finalMessage);
+        this.getMargin();
         this.isShowResult = true;
       },
       err => {
@@ -263,15 +320,27 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   }
 
   private toggleSelect(i)  {
-    let checked: boolean = this.optionsAnswered[i].checked;
-    if (checked){
-      this.optionsAnswered[i].checked = false;
-    }
-    else{
+    if (this.currentQuestion.type==='unica'){
+      for (let j = 0; j<this.optionsAnswered.length; j++){
+        this.optionsAnswered[j].checked = false;
+      }
       this.optionsAnswered[i].checked = true;
       if (this.currentQuestion.options[i].message)
       {
         this.showMessage(i);
+      }
+    }
+    else{
+      let checked: boolean = this.optionsAnswered[i].checked;
+      if (checked){
+        this.optionsAnswered[i].checked = false;
+      }
+      else{
+        this.optionsAnswered[i].checked = true;
+        if (this.currentQuestion.options[i].message)
+        {
+          this.showMessage(i);
+        }
       }
     }
   }
@@ -285,6 +354,12 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   private closeMessage(){
     this.isShowMessage = false;
     this.getMargin();
+  }
+
+  private getCoverClass(){
+    if (this.isShowResult) return {'container-cover-result': true};
+    if (this.isShowMessage) return {'container-cover-message': true};
+    return {'container-cover': true};
   }
 
 }

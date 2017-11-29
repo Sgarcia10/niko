@@ -1,93 +1,99 @@
-<div class="container-cover" [style.min-height.px]="height" >
+<div [ngClass]="getCoverClass()" [style.min-height.px]="height" >
 <div class="container container-full" >
 <div class="container container-question" #containerQuestion [style.margin-top.px]="margin">
-    <div  *ngIf="available && !isShowMessage && !isShowResult" >
+    <div  *ngIf="isShowQuestion && !isShowMessage && !isShowResult"  >
+        <div *ngIf="currentQuestion.help" class="card card-remark">
+            <div class="card-header header-remark">
+                <p>{{currentQuestion.help.title}}</p>
+            </div>
+            <div class="card-block block-remark">
+                <p>{{currentQuestion.help.text}}</p>
+            </div>
+            <!-- <div class="message-text">
+                <p>{{currentMessage.text}}</p>
+            </div> -->
+        </div>
         <div class="row">
-            <div class="col-lg col-md-12">
-                <div class="question-title">
+            <div class="card card-question">
+                <div class="header-question">
                     <p>{{currentQuestion.title}}</p>
                 </div>
-                <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
-                    <div class="form-group">
-                        <textarea class="form-control" name="name" rows="3"
-                        [(ngModel)]="optionsAnswered[0].ans" name="textArea"></textarea>
+                <div class="block-question">
+                    <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
+                        <div class="form-group">
+                            <textarea class="form-control" name="name" rows="3"
+                            [(ngModel)]="optionsAnswered[0].ans" name="textArea"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div *ngIf="!isAbierta()" class="respuesta-unica">
-                    <div *ngFor="let option of optionsAnswered; let i = index">
-                        <div class="row">
-                            <div class="col form-check" >
-                                <label class="form-check-label">
-                                    <input [type]="tipoOpcion(i)" [checked]="option.checked"
-                                    (change)="toggleSelect(i)"
-                                    class="form-check-input" name="tipo">
-                                    {{option.text}}
-                                </label>
-                                <div  *ngIf="isTextArea(i) && optionChecked(i)">
-                                  <textarea class="text-area" rows="4" [(ngModel)]="option.ans">
-                                  </textarea>
+                    <div *ngIf="!isAbierta()" class="respuesta-unica">
+                        <div *ngFor="let option of optionsAnswered; let i = index">
+                            <div class="row">
+                                <div class="col form-check" >
+                                    <label class="form-check-label">
+                                        <input [type]="tipoOpcion(i)" [checked]="option.checked"
+                                        (change)="toggleSelect(i)"
+                                        class="form-check-input" name="tipo">
+                                        {{option.text}}
+                                    </label>
+                                    <div  *ngIf="isTextArea(i) && optionChecked(i)">
+                                      <textarea class="text-area" rows="4" [(ngModel)]="option.ans">
+                                      </textarea>
+                                    </div>
                                 </div>
-                            </div>
-                            <div *ngIf="option.help" class="col-1">
+                                <div *ngIf="option.help" class="col-1">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div *ngIf="currentQuestion.help" class="col-lg-5 col-md-12">
-                <div class="message-title">
-                    <p>{{currentQuestion.help.title}}</p>
-                </div>
-                <div class="message-text">
-                    <p>{{currentQuestion.help.text}}</p>
-                </div>
-                <!-- <div class="message-text">
-                    <p>{{currentMessage.text}}</p>
-                </div> -->
-            </div>
         </div>
 
         <div class="row justify-content-center">
-            <div *ngIf="currentPos>1" class="col-4">
-                <a class="mover-btn" (click)="anterior()"><i class="fa fa-arrow-left fa-3x" aria-hidden="true"></i>
-                </a>
+            <div *ngIf="currentQuestionAnswered.posQuestion>1" class="col-4 col-move">
+                <button class="btn btn-warning move-btn" (click)="back()"><i class="fa fa-arrow-left fa-3x" aria-hidden="true"></i>
+                </button>
             </div>
-            <div class="col-4">
-                <a class="mover-btn" (click)="siguiente()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
-                </a>
+            <div class="col-4 col-move">
+                <button class="btn btn-warning move-btn" (click)="next()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
     </div>
-    <div *ngIf="isShowMessage">
-        <div class="message-title">
-            <p>{{currentMessage.title}}</p>
+    <div *ngIf="isShowMessage" >
+        <div class="card card-remark">
+            <div class="card-header header-remark">
+                <p>{{currentMessage.title}}</p>
+            </div>
+            <div *ngIf="currentMessage.text!==''" class="card-block block-remark">
+                <p>{{currentMessage.text}}</p>
+            </div>
         </div>
-        <div class="message-text">
-            <p>{{currentMessage.text}}</p>
-        </div>
-        <a (click)="closeMessage()" class="btn btn-xl ">Entendido!</a>
+        <div (click)="closeMessage()" class="btn btn-xl btn-result ">Entendido!</div>
     </div>
 
     <div *ngIf="!isShowMessage && isShowResult">
-        <div class="result-title">
-            <p>RESULTADO</p>
+        <div class="card card-remark">
+            <div class="card-header result-title">
+                RESULTADO
+            </div>
         </div>
         <div *ngFor="let remark of remarks">
             <div class="card card-remark">
                 <div class="card-header header-remark">
                     {{remark.title}}
                 </div>
-                <div class="card-block block-remark">
+                <div *ngIf="remark.text!==''" class="card-block block-remark">
                     {{remark.text}}
                 </div>
             </div>
         </div>
         <div class="row justify-content-md-center">
             <div class="col-md-2 col-12">
-                <a (click)="closeResult()" class="btn btn-xl ">¡Adios!</a>
+                <div (click)="closeResult()" class="btn btn-xl btn-result">¡Adios!</div>
             </div>
             <div class="offset-md-1 col-md-2 col-12">
-                <a (click)="downloadResult()" class="btn btn-xl ">Descargar</a>
+                <div (click)="downloadResult()" class="btn btn-xl btn-result">Descargar</div>
             </div>
         </div>
         <!-- <div class="message-text">

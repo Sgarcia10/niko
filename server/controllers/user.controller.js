@@ -15,7 +15,7 @@ exports.authenticate = function(username, password){
           if (err0) reject(err);
           if (res){
             var token = jwt.sign({_id: user._id}, config.secret, {
-    					expiresIn: 86400*2 // expires in 24 hours
+    					expiresIn: 10800 // expires in 24 hours
     				});
             var authUser = new AuthUser({
               _id : user._id,
@@ -34,12 +34,12 @@ exports.authenticate = function(username, password){
   });
 }
 
-exports.verifyRole = function(userid){
+exports.getRole = function(userid){
     return new Promise((resolve, reject) => {
-        var query = User.findOne({_id: userid}, (err,user) => {
+        var query = User.findById(userid, (err,user) => {
             if(err) reject(err);
-            if(user) resolve({role:user.role});
-            else reject();
+            if(user) resolve(user.role);
+            resolve('');
         });
     });
 }

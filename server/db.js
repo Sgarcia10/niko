@@ -6,7 +6,7 @@ mongoose.connect(dbURI, {
   /* other options */
 });
 
-mongoose.Promise = global.Promise;
+mongoose.Promise = require('q').Promise;
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {

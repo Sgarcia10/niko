@@ -23,6 +23,7 @@
 	padding: 15px 45px;
 	font-size: 16px;
   transition: all 0.3s;
+  margin: 15px;
 }
 
 .btn:hover {
@@ -146,7 +147,6 @@ select:invalid{
   user-select: none;
   position: relative;
   min-height: 30px;
-  background-color: rgba(198, 149, 154, 0.5);
   min-height: 80px;
   margin-top: 5px;
   margin-bottom: 5px;

@@ -26,6 +26,12 @@ exports.delete = function(req, res){
     .catch(err => res.status(400).send('No se pudo eliminar: '+err));
 }
 
+exports.finish = function(req, res){
+    projectController.finish(req.params._id)
+    .then(project => res.send(project))
+    .catch(err => res.status(400).send('No se pudo finalizar: '+err));
+}
+
 // exports.update = function(req, res){
 //     questionController.update(req.body)
 //       .then(category => res.send(category))

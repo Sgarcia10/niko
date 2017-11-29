@@ -27,6 +27,10 @@ exports.getByUserId = function(id){
     return deferred.promise;
 }
 
+exports.finish = function(id){
+    return Project.findByIdAndUpdate(id, {'currentAnswerId': '-1'}).lean().exec();
+}
+
 exports.getActiveSurvey = function(){
     var deferred = Q.defer();
     Survey.findOne({'active' : true}, '_id', (err, doc)=> {

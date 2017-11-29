@@ -26,8 +26,8 @@ router.use(function(req, res, next) {
 
 	// check header or url parameters or post parameters for token
 	var token;
-  if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-      token = req.headers.authorization.split(' ')[1];
+  if (req.headers.authorization && req.headers.authorization.split('&')[0] === 'NIKO') {
+      token = req.headers.authorization.split('&')[1];
   }
 	// decode token
 	if (token) {
@@ -61,7 +61,54 @@ router.use(function(req, res, next) {
 
 });
 
-router.post('/user/verifyRole', userService.verifyRole);
+router.use(function(req, res, next) {
+
+	// check header or url parameters or post parameters for token
+  userService.getRole(req.decoded._id)
+  .then((role) => {
+    if(role && (role==='user' || role==='admin')){
+      return next();
+    }
+    else{
+      return res.status(401).send('Acceso invalido');
+    }
+  })
+  .catch(function (err) {
+      return res.status(401).send('Intente mas tarde');
+  });
+});
+
+router.get('/user/questions/pos/:pos,:idSurvey', questionService.getByPos);
+
+router.post('/user/projects/create', projectService.create);
+router.get('/user/projects/user/:_id', projectService.getByUserId);
+router.get('/user/projects/activeSurvey', projectService.getActiveSurvey);
+router.put('/user/projects/finish/:_id', projectService.finish);
+router.delete('/user/projects/:_id', projectService.delete);
+
+router.post('/user/answer/create', answerService.create);
+router.get('/user/answers/remarks/:idProject', answerService.getResult);
+router.get('/user/answer/:_id', answerService.getById);
+router.delete('/user/answer/:_id', answerService.remove);
+router.get('/user/answers/position/:_pos,:_idProject', answerService.getByPos);
+
+router.use(function(req, res, next) {
+
+	// check header or url parameters or post parameters for token
+  userService.getRole(req.decoded._id)
+  .then((role) => {
+    if(role && (role==='admin')){
+      return next();
+    }
+    else{
+      return res.status(401).send('Acceso invalido');
+    }
+  })
+  .catch(function (err) {
+      return res.status(401).send('Intente mas tarde');
+  });
+});
+
 
 router.post('/admin/surveys/create', surveyService.create);
 router.put('/admin/surveys/update', surveyService.update);
@@ -85,16 +132,9 @@ router.get('/admin/question/:_id', questionService.getById);
 
 router.get('/admin/dashboard/questions/:idSurvey', dashboardService.getQuestions);
 router.get('/admin/dashboard/stats/:idQuestion,:idSurvey', dashboardService.stats);
+router.get('/admin/dashboard/stats/getAllAnswers', dashboardService.getAllAnswers);
+router.get('/admin/dashboard/stats/getAllProjects', dashboardService.getAllProjects);
+router.get('/admin/dashboard/stats/getAllUsers', dashboardService.getAllUsers);
 
-router.get('/user/questions/pos/:pos,:idSurvey', questionService.getByPos);
-
-router.post('/user/projects/create', projectService.create);
-router.get('/user/projects/user/:_id', projectService.getByUserId);
-router.get('/user/projects/activeSurvey', projectService.getActiveSurvey);
-router.delete('/user/projects/:_id', projectService.delete);
-
-router.post('/user/answer/create', answerService.create);
-router.get('/user/answers/remarks/:idProject', answerService.getResult);
-router.get('/user/answer/:_id', answerService.getById);
 
 module.exports = router;

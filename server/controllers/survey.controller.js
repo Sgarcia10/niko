@@ -34,35 +34,25 @@ exports.update = function(survey){
 
 exports.delete = function(id)
 {
-    var promise1 = Survey.findByIdAndRemove(id).lean().exec();
-    var promise2 = Category.deleteMany({'idSurvey':id}).exec();
-    var promise3 = Question.deleteMany({'idSurvey':id}).exec();
-
-    return promise1
-      .then(promise2)
-      .then(promise3);
+    return Survey.findByIdAndRemove(id).lean().exec()
+      .then(()=>{return Category.deleteMany({'idSurvey':id}).exec()})
+      .then(()=>{return Question.deleteMany({'idSurvey':id}).exec()});
 }
 
 exports.activate = function(id, currentActive)
 {
-    var promise1 = Survey.updateMany({'active' : true},{$set : {'active' : false}}).exec();
-    var promise2 = Survey.findByIdAndUpdate(id, {$set : {'active' : true}}).exec();
-
-    if(currentActive==='false'){
-        return promise1;
-    }
-    else{
-      return promise1.then(()=>{
-        return promise2.then(()=>{
-          return Promise.resolve(true);
-        });
-      });
-    }
+    return Survey.updateMany({'active' : true},{$set : {'active' : false}}).exec()
+    .then(()=>{
+      if(currentActive==='true')
+        return Survey.findByIdAndUpdate(id, {$set : {'active' : true}}).exec();
+    }).then(()=> {
+      return Survey.findById(id, 'active').exec();
+    });
 }
 
 exports.finish = function(id)
 {
-    return promise = Survey.findByIdAndUpdate(id, {$set : {'finished' : true}}).exec();
+    return Survey.findByIdAndUpdate(id, {$set : {'finished' : true}}).exec();
 }
 
 exports.clone = function(survey){

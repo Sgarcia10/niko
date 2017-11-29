@@ -7,7 +7,7 @@
           <div class="titulo-lista">
               <h2>Proyectos:</h2>
           </div>
-          <div class="row card-header" *ngFor="let project of projects; let i = index">
+          <div class="row card-header" *ngFor="let project of projects; let i = index" [style.background-color]="getColor(i)">
               <div class="col-11 project-name" (click)="continue(i)">
                 {{project.title}}
               </div>
@@ -18,25 +18,52 @@
           </div>
           <a (click)="add()" class="btn btn-xl ">Agregar proyecto</a>
     </div>
-    <div *ngIf="newProject" class="container-form" [style.margin-top.px]="getMargin()">
+    <div *ngIf="newProject"  class="container-form" [style.margin-top.px]="getMargin()">
         <div class="login-text">
-            <h2>Tu nuevo proyecto:</h2>
+            <h2>Nuevo proyecto:</h2>
         </div>
-        <form  name="form" class="form-login"   novalidate>
+        <form  name="form" #projectForm="ngForm" class="form-login"   novalidate>
             <div class="form-group">
-                <textarea class="form-control text-titulo" id="exampleTextarea"
-                [(ngModel)] = "currentProject.title" name="title"
-                rows="4" placeholder="Titulo de tu proyecto"></textarea>
+                <textarea class="form-control text-titulo"
+                [(ngModel)] = "currentProject.title" name="title" #title="ngModel"
+                rows="4" placeholder="Título de su proyecto"
+                required minlength="4"></textarea>
+                <div *ngIf="title.invalid && (title.dirty || title.touched)"
+                     class="alert alert-danger">
+                    <div *ngIf="title.errors.required">
+                      El título es requerido
+                    </div>
+                    <div *ngIf="title.errors.minlength">
+                      El título debe ser de al menos 4 caracteres
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control input-text"
-                [(ngModel)] = "currentProject.adviser" name="adviser"
-                placeholder="Nombre del asesor" />
+                [(ngModel)] = "currentProject.adviser" name="adviser" #adviser="ngModel"
+                placeholder="Nombre del asesor"
+                required minlength="6"/>
+                <div *ngIf="adviser.invalid && (adviser.dirty || adviser.touched)"
+                     class="alert alert-danger">
+                    <div *ngIf="adviser.errors.required">
+                      El nombre del asesor es requerido
+                    </div>
+                    <div *ngIf="adviser.errors.minlength">
+                      El nombre del asesor debe ser de al menos 4 caracteres
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control input-text"
-                [(ngModel)] = "currentProject.subject" name="subject"
-                placeholder="Nombre del curso" />
+                [(ngModel)] = "currentProject.subject" name="subject" #subject="ngModel"
+                placeholder="Nombre del curso"
+                required />
+                <div *ngIf="subject.invalid && (subject.dirty || subject.touched)"
+                     class="alert alert-danger">
+                    <div *ngIf="subject.errors.required">
+                      El curso es requerido
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <div class="row">
@@ -54,8 +81,14 @@
             </div>
             <div class="form-group">
                 <input type="text" class="form-control input-text"
-                [(ngModel)] = "currentProject.type" name="type"
-                placeholder="Tipo de proyecto"  />
+                [(ngModel)] = "currentProject.type" name="type" #type="ngModel"
+                placeholder="Tipo de proyecto" required/>
+                <div *ngIf="type.invalid && (type.dirty || type.touched)"
+                     class="alert alert-danger">
+                    <div *ngIf="type.errors.required">
+                      El tipo de proyecto es requerido
+                    </div>
+                </div>
                 <popover-content #myPopover
                     class = "help-popover"
                     placement="left"
@@ -67,7 +100,7 @@
                     </div>
                 </popover-content>
                 <a class="help" aria-label="Left Align" ata-container="body"
-                [popover]="myPopover" [popoverDismissTimeout]="4000" >
+                [popover]="myPopover" [popoverDismissTimeout]="5000" >
                   <i class="fa fa-question-circle fa-2x color" aria-hidden="true"></i>
                 </a>
             </div>
@@ -99,7 +132,7 @@
               </select>
             </div>
             <div class="form-group" style="text-align: center;">
-                <a (click)="saveProject()" class="btn btn-xl ">Empezar</a>
+                <button (click)="saveProject()" class="btn btn-xl " [disabled]="projectForm.invalid">Empezar</button>
 
             </div>
         </form>

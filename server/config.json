@@ -1,5 +1,5 @@
 {
-    "connectionURI": "mongodb://localhost:27017/niko",
+    "connectionURI": "mongodb://sgarcia10:electro.2011@ds257485.mlab.com:57485/niko",
     "apiUrl": "http://localhost:4000",
     "secret": "NIKO_2018"
 }

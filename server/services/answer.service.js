@@ -20,6 +20,18 @@ exports.getById = function(req, res){
       .catch(err => res.status(400).send('No se encuentran las respeustas: '+err));
 }
 
+exports.remove = function(req, res){
+    answerController.remove(req.params._id)
+      .then(ans => res.send(ans))
+      .catch(err => res.status(400).send('No se puede eliminar respuesta: '+err));
+}
+
+exports.getByPos = function(req, res){
+    answerController.getByPos(req.params._pos, req.params._idProject)
+      .then(ans => res.send(ans))
+      .catch(err => res.status(400).send('No se puede eliminar respuesta: '+err));
+}
+
 // exports.getByUserId = function(req, res){
 //     projectController.getByUserId(req.params._id)
 //       .then(projects => res.send(projects))
