@@ -113,6 +113,7 @@ export class QuestionComponent implements OnInit, AfterViewChecked {
     const questionBasic: QuestionBasic = this.service.getQuestionBasic();
     questionBasic.title = this.currentQuestion.title;
     this.service.setQuestionBasic(questionBasic);
+    console.log(this.currentQuestion.idSurvey);
     if (!this.update){
       this.service.create().subscribe(
         data => {

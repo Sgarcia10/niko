@@ -28,7 +28,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="form-group row">
-                    <label class="col-sm-3">Tipo de Respuesta:</label>
+                    <label class="col-sm-3">Tipo de respuesta:</label>
                     <div class="col-sm-9 row">
                         <div class="col-lg-3 col-md-6 col-sm-6" *ngFor="let type of types; let i = index">
                             <div class="form-check">
@@ -136,7 +136,7 @@
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input [name]="i+'saltarSelect'+j" class="form-check-input" [checked]="option.jump>0" (click)="toggleJump(j)"
-                                   type="checkbox" [disabled]="currentSurvey.finished"> Saltar numero de Preguntas:
+                                   type="checkbox" [disabled]="currentSurvey.finished"> Saltar número de Preguntas:
                             </label>
                         </div>
                         <div *ngIf="option.jump>0" class="col-4 col-sm-2">
@@ -158,7 +158,7 @@
                         <div class="form-check">
                             <label class="form-check-label">
                                 <input class="form-check-input" [checked]="isMessage(j)" (click)="toggleMessage(j)"
-                                  type="checkbox"> Agregar Mensaje:
+                                  type="checkbox"> Agregar mensaje:
                             </label>
                         </div>
                     </div>

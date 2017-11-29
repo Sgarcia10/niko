@@ -18,8 +18,8 @@
 }
 .btn {
   min-height: 100%;
-  min-width: 33.33333%;
-  flex: 0 0 33.333333%;
+  min-width: 50%;
+  flex: 0 0 50%;
   background-color: transparent;
   border-style: solid;
   border-radius: 5px;

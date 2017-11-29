@@ -203,6 +203,10 @@ export class SurveyComponent implements OnInit {
         .fontSize(20)
         .text(survey.name, {
           align: 'center'})
+        .moveDown()
+        .fontSize(18)
+        .text(survey._id, {
+          align: 'center'})
        .moveDown();
       this.surveyService.getRedable(idSurvey).subscribe(
         cats => {

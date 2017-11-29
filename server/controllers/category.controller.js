@@ -16,7 +16,7 @@ exports.update = function(id, category){
 }
 
 exports.getBySurveyId = function(id){
-    return Category.find({idSurvey: id}).lean().exec();
+    return Category.find({idSurvey: id}).sort('pos').lean().exec();
 }
 
 exports.delete = function(id)

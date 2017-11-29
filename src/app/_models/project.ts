@@ -8,16 +8,9 @@ export class Project {
         public subject: string,
         public activity: string,
         public type: string,
-        public period: Period,
+        public period: string,
         public program: string,
         public user: UserProject
-    ){}
-}
-
-export class Period {
-    constructor(
-        public year: number,
-        public semester: number
     ){}
 }
 

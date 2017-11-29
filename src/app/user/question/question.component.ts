@@ -110,10 +110,12 @@ export class QuestionComponent implements OnInit, AfterViewInit {
               this.getMargin();
             }
             else{
-              this.getResult();
+              this.finishProject();
             }
           },
-          err => this.router.navigate(['../'], { relativeTo: this.route })
+          err => {
+            this.finishProject();
+          }
         );
   }
 
@@ -145,20 +147,6 @@ export class QuestionComponent implements OnInit, AfterViewInit {
 
   }
 
-
-  private anterior(){
-      // if(this.jump>0){
-      //   this.currentPos = this.currentPos-this.jump-1;
-      // }
-      // else
-      //   this.currentPos = this.currentPos-1;
-      //   let long = this.answerService.answer.questions.length;
-      // this.currentQuestion = this.answerService.answer.questions[long-2];
-      // this.answerService.answer.questions.splice(this.currentPos-1,1);
-      // this.jump = 0;
-
-  }
-
   private next(){
     this.isShowQuestion = false;
     let currentPos = this.currentQuestionAnswered.posQuestion;
@@ -170,8 +158,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       data => {
         this.currentQuestionAnswered = new QuestionAnswered('', nextPos, '',
         idSurvey, idProject, currentPos, '', '', [], []);
-        if (nextPos>12) this.finishProject();
-        else this.loadCurrentQuestion();
+        this.loadCurrentQuestion();
       },
       err => {
          this.alertService.error(err);
@@ -199,7 +186,8 @@ export class QuestionComponent implements OnInit, AfterViewInit {
           i++;
         }
       }
-      return this.currentQuestionAnswered.posQuestion + n + 1;
+      n = (n>0)? n : 1;
+      return this.currentQuestionAnswered.posQuestion + n;
   }
 
   private back(){
@@ -343,6 +331,24 @@ export class QuestionComponent implements OnInit, AfterViewInit {
         }
       }
     }
+  }
+
+  private validAbierta(): boolean{
+    if (this.currentQuestion.type==='abierta'){
+      return (this.optionsAnswered[0].ans === '')? false : true;
+    }
+    else return true;
+  }
+
+  private validNoAbierta(): boolean{
+    if (this.currentQuestion.type!=='abierta'){
+      let valid = false;
+      for (let j = 0; j<this.optionsAnswered.length; j++){
+        valid = valid || this.optionsAnswered[j].checked;
+      }
+      return valid;
+    }
+    return true;
   }
 
   private showMessage(i){

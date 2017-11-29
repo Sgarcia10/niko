@@ -13,16 +13,22 @@
                 <p>{{currentMessage.text}}</p>
             </div> -->
         </div>
-        <div class="row">
+        <div >
             <div class="card card-question">
-                <div class="header-question">
+                <div class="card-header header-question">
                     <p>{{currentQuestion.title}}</p>
                 </div>
-                <div class="block-question">
+                <div class="card-block block-question">
                     <div *ngIf="isAbierta()" ngclass="respuessta-abierta">
                         <div class="form-group">
                             <textarea class="form-control" name="name" rows="3"
                             [(ngModel)]="optionsAnswered[0].ans" name="textArea"></textarea>
+                            <div *ngIf="!validAbierta()"
+                                 class="alert alert-danger">
+                                <div>
+                                  Por favor responda
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div *ngIf="!isAbierta()" class="respuesta-unica">
@@ -40,8 +46,14 @@
                                       </textarea>
                                     </div>
                                 </div>
-                                <div *ngIf="option.help" class="col-1">
-                                </div>
+                                <!-- <div *ngIf="option.help" class="col-1">
+                                </div> -->
+                            </div>
+                        </div>
+                        <div *ngIf="!validNoAbierta()"
+                             class="alert alert-danger">
+                            <div>
+                              Por favor seleccione una opción
                             </div>
                         </div>
                     </div>
@@ -49,13 +61,13 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center move-group">
             <div *ngIf="currentQuestionAnswered.posQuestion>1" class="col-4 col-move">
                 <button class="btn btn-warning move-btn" (click)="back()"><i class="fa fa-arrow-left fa-3x" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="col-4 col-move">
-                <button class="btn btn-warning move-btn" (click)="next()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
+                <button *ngIf="validAbierta() && validNoAbierta()" class="btn btn-warning move-btn" (click)="next()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
                 </button>
             </div>
         </div>

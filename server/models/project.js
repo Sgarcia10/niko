@@ -1,16 +1,5 @@
 var mongoose = require( 'mongoose' );
 
-var period = new mongoose.Schema({
-    _id : false,
-    year : {
-      type : Number,
-      required : true
-    },
-    semester : {
-      type : Number,
-      required : true
-    }
-  });
 
 var user = new mongoose.Schema({
     _id : false,
@@ -55,7 +44,10 @@ var projectSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    period: period,
+    period: {
+      type: String,
+      required: true
+    },
     program: {
       type: String,
       required: true

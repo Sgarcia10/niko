@@ -2,6 +2,15 @@
   padding: 30px 10px 20px 10px;
   max-width: 100%;
   position: relative;
+  min-height: 100%;
+}
+
+.form-dashboard{
+  margin-top: 40%;
+  -ms-transform: translateY(-50%); /* IE 9 */
+  -moz-transform: translateY(-50%); /* IE 9 */
+  -webkit-transform: translateY(-50%); /* Safari */
+  transform: translateY(-50%);
 }
 
 .add-category{

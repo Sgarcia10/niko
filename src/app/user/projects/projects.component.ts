@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-import { QuestionAnswered, Project, Period, UserProject, Survey } from '../../_models/index';
+import { QuestionAnswered, Project, UserProject, Survey } from '../../_models/index';
 import { AnswerService, ProjectService, AlertService,
   DialogService} from '../../_services/index';
 import { carreras } from './carreras';
@@ -21,6 +21,7 @@ export class ProjectsComponent implements OnInit {
   private currentProject: Project;
   private currentUser: UserProject;
   private projects: Project[] = [];
+  private periods: string[];
 
   constructor(
     private ngZone: NgZone,
@@ -50,8 +51,38 @@ export class ProjectsComponent implements OnInit {
     let u = JSON.parse(localStorage.getItem('currentUser'));
     this.currentUser = new UserProject(u._id, u.username, u.code);
     this.projectService.currentProject = null;
+    this.setPeriods();
     this.getProjects();
+  }
 
+  private setPeriods()
+  {
+      this.periods = [
+        '201110',
+        '201120',
+        '201130',
+        '201210',
+        '201220',
+        '201230',
+        '201310',
+        '201320',
+        '201330',
+        '201410',
+        '201420',
+        '201430',
+        '201510',
+        '201520',
+        '201530',
+        '201610',
+        '201620',
+        '201630',
+        '201710',
+        '201720',
+        '201730',
+        '201810',
+        '201820',
+        '201830',
+      ];
   }
 
   private getMargin(){
@@ -107,7 +138,7 @@ export class ProjectsComponent implements OnInit {
             if (survey){
               this.newProject = true;
               this.currentProject = new Project('', survey._id, '', '', '', '', 'individual', '',
-                new Period(2018, 1), '', this.currentUser);
+                '', '', this.currentUser);
               window.scrollTo(0, 0);
             }
             else{

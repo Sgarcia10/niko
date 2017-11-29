@@ -18,6 +18,7 @@
 
 .btn-xl {
 	color: #fff;
+  background-color: transparent;
 	border: 2px solid;
 	border-radius: 300px;
 	padding: 15px 45px;
@@ -113,6 +114,11 @@ select:invalid{
   position: relative;
   margin: auto;
   background-color: rgba(255, 255, 255, 0.32);
+}
+
+.text-periodo{
+  text-align: left;
+  width: 100%;
 }
 
 .popover.left.in{

@@ -80,7 +80,7 @@ exports.getByPos = function(pos, idSurvey){
   Category.findOne({"questions.pos": pos, 'idSurvey': idSurvey}, {"_id":0,"questions" : {$elemMatch: {"pos" :pos}}}, (err1, doc1) =>{
     if(err1) deferred.reject(err1);
     else if(doc1){
-      Question.findById(doc1.questions[0].idQuestion, (err2, doc2) =>{
+      Question.findOne({'_id': doc1.questions[0].idQuestion, 'idSurvey': idSurvey}, (err2, doc2) =>{
         if(err2) deferred.reject(err2);
         else if(doc2) deferred.resolve(doc2);
         else deferred.reject("Database error2");

@@ -36,7 +36,7 @@
 .header-question{
 	background-color: rgba(238, 238, 238, 0.64);
 	color: rgb(20, 85, 138);
-  font-size: 20px;
+  font-size: 17px;
   line-height: 1.2;
   font-weight: bold;
   word-spacing: 1px;
@@ -55,6 +55,10 @@
   font-weight: bold;
   word-spacing: 1px;
   font-family: 'Catamaran',sans-serif;
+}
+
+.move-group{
+	padding: 15px;
 }
 
 .respuesta-abierta{
@@ -136,8 +140,10 @@
 
 .block-remark{
   text-align: justify;
-  text-justify: inter-word;
+  text-justify: auto;
+	white-space: pre-line;
 }
+
 
 .btn-result {
 	color: white;

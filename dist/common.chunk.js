@@ -6,8 +6,8 @@ webpackJsonp(["common"],{
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return types; });
 var types = [
-    { 'type': 'unica', 'text': 'Unica' },
-    { 'type': 'multiple', 'text': 'Multiple' },
+    { 'type': 'unica', 'text': 'Única' },
+    { 'type': 'multiple', 'text': 'Múltiple' },
     { 'type': 'abierta', 'text': 'Abierta' },
     { 'type': 'cargarArchivo', 'text': 'Cargar Archivo' }
 ];
@@ -110,21 +110,20 @@ var CategoryFull = (function () {
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__category__ = __webpack_require__("../../../../../src/app/_models/category.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__category__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_1__category__["b"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_1__category__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__question__ = __webpack_require__("../../../../../src/app/_models/question.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_2__question__["a"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_2__question__["b"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "d", function() { return __WEBPACK_IMPORTED_MODULE_2__question__["c"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_2__question__["d"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_2__question__["d"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__answer__ = __webpack_require__("../../../../../src/app/_models/answer.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "e", function() { return __WEBPACK_IMPORTED_MODULE_3__answer__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "i", function() { return __WEBPACK_IMPORTED_MODULE_3__answer__["b"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "h", function() { return __WEBPACK_IMPORTED_MODULE_3__answer__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__project__ = __webpack_require__("../../../../../src/app/_models/project.ts");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "f", function() { return __WEBPACK_IMPORTED_MODULE_4__project__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "g", function() { return __WEBPACK_IMPORTED_MODULE_4__project__["b"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "l", function() { return __WEBPACK_IMPORTED_MODULE_4__project__["c"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_4__project__["b"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__survey__ = __webpack_require__("../../../../../src/app/_models/survey.ts");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "k", function() { return __WEBPACK_IMPORTED_MODULE_5__survey__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "j", function() { return __WEBPACK_IMPORTED_MODULE_5__survey__["a"]; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__categoryFull__ = __webpack_require__("../../../../../src/app/_models/categoryFull.ts");
 /* unused harmony namespace reexport */
 
@@ -142,9 +141,8 @@ var CategoryFull = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Project; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Period; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return UserProject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Project; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return UserProject; });
 var Project = (function () {
     function Project(_id, idSurvey, currentAnswerId, title, adviser, subject, activity, type, period, program, user) {
         this._id = _id;
@@ -160,14 +158,6 @@ var Project = (function () {
         this.user = user;
     }
     return Project;
-}());
-
-var Period = (function () {
-    function Period(year, semester) {
-        this.year = year;
-        this.semester = semester;
-    }
-    return Period;
 }());
 
 var UserProject = (function () {

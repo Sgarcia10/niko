@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { saveAs } from 'file-saver';
 import { DashboardService, AlertService } from '../../_services/index';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Survey, Question, QuestionAnswered } from '../../_models/index';
+import { Survey, Question, QuestionAnswered, Project } from '../../_models/index';
 
 @Component({
   selector: 'app-dashboard',
@@ -56,14 +56,14 @@ export class DashboardComponent implements OnInit {
       ans => {
         const answers: QuestionAnswered [] = ans;
         if (answers==={}){
-          this.alertService.success('No hay respuestas a la pregunta seleccionada');
+          this.alertService.success('No hay respuestas aún');
         }
         else {
           let data = '';
           data += 'Pregunta No&';
           data += 'ID Encuesta&';
           data += 'ID Proyecto&';
-          data += 'Títululo&';
+          data += 'Título&';
           data += 'Tipo&';
           for (let i = 0; i<10; i++){
             data += 'Id Respuesta&';
@@ -97,25 +97,47 @@ export class DashboardComponent implements OnInit {
   }
 
   private downloadAllProjects(){
-    this.dashboardService.getAllAnswers().subscribe(
-      ans => {
-        const answers: QuestionAnswered [] = ans;
-        if (answers.length===0){
-          this.alertService.success('No hay respuestas a la pregunta seleccionada');
+    this.dashboardService.getAllProjects().subscribe(
+      res => {
+        const projects: Project [] = res;
+        if (projects==={}){
+          this.alertService.success('No hay proyectos');
         }
         else {
           let data = '';
-          for (let i = 0; i<answers.length; i++){
-            const answer = answers[i];
-            for (let j = 0; j<answer.optionsAnswered.length; j++){
-              const optionAnswered = answer.optionsAnswered[j];
-              data+=optionAnswered._id+'&'+optionAnswered.checked+'&'+optionAnswered.ans;
-            }
-            if (i<answer.optionsAnswered.length) data+='\n';
+          data += 'ID Proyecto&';
+          data += 'ID Encuesta&';
+          data += 'Terminada&';
+          data += 'Título&';
+          data += 'Asesor&';
+          data += 'Curso&';
+          data += 'Actividad&';
+          data += 'Tipo&';
+          data += 'Periodo&';
+          data += 'Programa&';
+          data += 'Username&';
+          data += 'Código';
+          data += '\n';
+          for (let i = 0; i<projects.length; i++){
+            const project = projects[i];
+            data += project._id+'&';
+            data += project.idSurvey+'&';
+            if (project.currentAnswerId==='-1') data += 'true&';
+            else data += 'false&';
+            data += project.title+'&';
+            data += project.adviser+'&';
+            data += project.subject+'&';
+            data += project.activity+'&';
+            data += project.type+'&';
+            data += project.period+'&';
+            data += project.program+'&';
+            data += project.user.username+'&';
+            data += project.user.code;
+            if (i<projects.length) data+='\n';
           }
           let blob: Blob = new Blob([data], {type: 'text/csv'});
           const currentTime = Date.now();
-          saveAs(blob, 'Answers'+currentTime+'.csv');
+          saveAs(blob, 'Projects'+currentTime+'.csv');
         }
       },
       err => this.alertService.error(err)
