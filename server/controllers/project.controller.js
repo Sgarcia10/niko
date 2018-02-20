@@ -19,7 +19,7 @@ exports.getByUserId = function(id){
     var deferred = Q.defer();
     Project.find({"user.userId": id}, (err, doc)=>{
       if(err) deferred.reject(err);
-      if(doc) {
+      else if(doc) {
         deferred.resolve(doc);
       }
     });
@@ -35,7 +35,11 @@ exports.getActiveSurvey = function(){
     var deferred = Q.defer();
     Survey.findOne({'active' : true}, '_id', (err, doc)=> {
         if (err) deferred.reject(err);
-        if (doc) deferred.resolve(doc);
+        else if (doc) {
+            console.log(doc);
+            deferred.resolve(doc);
+        }
+        deferred.resolve({});
     });
     return deferred.promise;
 }

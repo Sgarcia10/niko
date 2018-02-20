@@ -1,5 +1,5 @@
 // Get dependencies
-
+const nodemailer = require('nodemailer');
 require('rootpath')();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -12,6 +12,38 @@ const api = require('./routes/api');
 //DB connection
 
 require('./db');
+
+// var transporter = nodemailer.createTransport({
+//     host: 'smtp.office365.com',
+//     port: 587,
+//     secure: false, // true for 465, false for other ports
+//     auth: {
+//         user: 'es.garcia430@uniandes.edu.co', // generated ethereal user
+//         pass: 'Anillo14'  // generated ethereal password
+//     },
+//     greetingTimeout: 4000
+// });
+//
+// transporter.verify((err, success)=>{
+//     if(err) console.log(err);
+//     else console.log('mail is ok');
+// });
+//
+// var mailOptions = {
+//     from: 'es.garcia430@uniandes.edu.co', // sender address
+//     to: 'garciasantiago10@gmail.com', // list of receivers
+//     subject: 'Hello ✔', // Subject line
+//     text: 'Hello world?' // plain text body
+// };
+//
+// // send mail with defined transport object
+// transporter.sendMail(mailOptions, (info, err) => {
+//     if (info) console.log(info);
+//     else if (err) {
+//         console.log(err);
+//     }
+// });
+
 // var mongoUtil = require( './db' );
 //
 // mongoUtil.connectToServer( function( err ) {

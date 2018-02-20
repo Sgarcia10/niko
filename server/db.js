@@ -1,12 +1,9 @@
 var mongoose = require('mongoose');
 var dbURI = process.env.MONGODB_URI || require('./config.json').connectionURI;
 
-mongoose.connect(dbURI, {
-  useMongoClient: true,
-  /* other options */
-});
+mongoose.connect(dbURI);
 
-mongoose.Promise = require('q').Promise;
+mongoose.Promise = require('bluebird');
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {

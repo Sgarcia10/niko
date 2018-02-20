@@ -1,8 +1,9 @@
 <div [ngClass]="getCoverClass()" [style.min-height.px]="height" >
 <div class="container container-full" >
 <div class="container container-question" #containerQuestion [style.margin-top.px]="margin">
-    <div  *ngIf="isShowQuestion && !isShowMessage && !isShowResult"  >
-        <div *ngIf="currentQuestion.help" class="card card-remark">
+    <div  *ngIf=" !isShowMessage && !isShowResult"  >
+        <div *ngIf="isShowingHelp" class="card card-remark">
+            <h3>Por favor lea el texto para responder la siguiente pregunta:</h3>
             <div class="card-header header-remark">
                 <p>{{currentQuestion.help.title}}</p>
             </div>
@@ -13,7 +14,7 @@
                 <p>{{currentMessage.text}}</p>
             </div> -->
         </div>
-        <div >
+        <div *ngIf="isShowQuestion">
             <div class="card card-question">
                 <div class="card-header header-question">
                     <p>{{currentQuestion.title}}</p>
@@ -67,7 +68,9 @@
                 </button>
             </div>
             <div class="col-4 col-move">
-                <button *ngIf="validAbierta() && validNoAbierta()" class="btn btn-warning move-btn" (click)="next()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
+                <button *ngIf="validAbierta() && validNoAbierta() && !isShowingHelp" class="btn btn-warning move-btn" (click)="next()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
+                </button>
+                <button *ngIf="isShowingHelp" class="btn btn-warning move-btn" (click)="helped()" ><i class="fa fa-arrow-right fa-3x" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
@@ -102,7 +105,7 @@
         </div>
         <div class="row justify-content-md-center">
             <div class="col-md-2 col-12">
-                <div (click)="closeResult()" class="btn btn-xl btn-result">¡Adios!</div>
+                <div (click)="closeResult()" class="btn btn-xl btn-result">¡Adiós!</div>
             </div>
             <div class="offset-md-1 col-md-2 col-12">
                 <div (click)="downloadResult()" class="btn btn-xl btn-result">Descargar</div>

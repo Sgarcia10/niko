@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { AlertService, AuthenticationService } from '../_services/index';
+import { AlertService, AuthenticationService, MailService } from '../_services/index';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private authenticationService: AuthenticationService,
+      private mailService: MailService,
       private alertService: AlertService)
   {
         // window.onresize = (e) =>
@@ -32,7 +33,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-
       this.height = window.innerHeight;
       // reset login status
       this.authenticationService.logout();
@@ -57,5 +57,15 @@ export class LoginComponent implements OnInit {
               });
   }
 
-
+  sendMail() {
+      this.mailService.sendMail()
+          .subscribe(
+              info => {
+                  console.log(info);
+              },
+              error => {
+                  console.log(error);
+              }
+          );
+  }
 }

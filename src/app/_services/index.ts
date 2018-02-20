@@ -8,3 +8,4 @@ export * from './answer.service';
 export * from './project.service';
 export * from './survey.service';
 export * from './dashboard.service';
+export * from './mail.service';

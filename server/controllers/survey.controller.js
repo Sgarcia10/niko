@@ -7,7 +7,6 @@ var Q = require('q');
 var Survey = require('../models/survey');
 var Question = require('../models/question');
 var Category = require('../models/category');
-var CategoryFull = require('../models/categoryFull');
 
 exports.create = function(s){
     var deferred = Q.defer();
@@ -57,9 +56,9 @@ exports.finish = function(id)
 
 exports.clone = function(survey){
     var deferred = Q.defer();
-    var id = survey._id;
+    var oldSurveyId = survey._id;
     var promise1 = new Promise((resolve, reject) => {
-      Survey.findById(id, (err, doc)=>{
+      Survey.findById(oldSurveyId, (err, doc)=>{
         if(err) reject(err);
         if(doc) {
           var s = new Survey({name: doc.name+'_copy'});
@@ -69,35 +68,50 @@ exports.clone = function(survey){
     });
 
     var promise2 = promise1.then(newSurvey => {
-      var newIdSurvey = newSurvey._id;
-      var promise3 = new Promise((resolve, reject) => {
-        Category.find({'idSurvey':id}, (err, docs)=>{
-          if(err) reject(err);
-          if(docs) {
-            for (var i = 0; i < docs.length; i++) {
-              docs[i]._id = mongo.Types.ObjectId();
-              docs[i].idSurvey = newIdSurvey;
+        var newSurveyId = newSurvey._id;
+        Category.find({'idSurvey': oldSurveyId}, (err, docs)=>{
+            if(err) reject(err);
+            if(docs) {
+              var s = new Survey({name: doc.name+'_copy'});
+              resolve(s.save());
             }
-            return resolve(Category.insertMany(docs));
-          }
         });
-      });
-      return promise3.then(()=>{
-        Question.find({'idSurvey':id}, (err, docs)=>{
-          if(err) return Promise.reject(err);
-          if(docs) {
-            for (var i = 0; i < docs.length; i++) {
-              docs[i]._id = mongo.Types.ObjectId();
-              docs[i].idSurvey = newIdSurvey;
-            }
-            return Promise.resolve(Question.insertMany(docs));
-          }
-        });
-      });
+    })
 
-    });
 
-    return promise2;
+    /////////////////////////////////////////////
+    /////////////    ANTERIOR   ////////////////
+    /////////////////////////////////////////////
+    // var promise2 = promise1.then(newSurvey => {
+    //   var newIdSurvey = newSurvey._id;
+    //   var promise3 = new Promise((resolve, reject) => {
+    //     Category.find({'idSurvey':id}, (err, docs)=>{
+    //       if(err) reject(err);
+    //       if(docs) {
+    //         for (var i = 0; i < docs.length; i++) {
+    //           docs[i]._id = mongo.Types.ObjectId();
+    //           docs[i].idSurvey = newIdSurvey;
+    //         }
+    //         return resolve(Category.insertMany(docs));
+    //       }
+    //     });
+    //   });
+    //   return promise3.then(()=>{
+    //     Question.find({'idSurvey':id}, (err, docs)=>{
+    //       if(err) return Promise.reject(err);
+    //       if(docs) {
+    //         for (var i = 0; i < docs.length; i++) {
+    //           docs[i]._id = mongo.Types.ObjectId();
+    //           docs[i].idSurvey = newIdSurvey;
+    //         }
+    //         return Promise.resolve(Question.insertMany(docs));
+    //       }
+    //     });
+    //   });
+    //
+    // });
+    //
+    // return promise2;
 }
 
 exports.getRedable = function(id){

@@ -10,6 +10,7 @@ const projectService = require('../services/project.service');
 const answerService = require('../services/answer.service');
 const surveyService = require('../services/survey.service');
 const dashboardService = require('../services/dashboard.service');
+const mailService = require('../services/mail.service');
 
 /* GET api listing. */
 router.get('/', (req, res) => {
@@ -18,6 +19,7 @@ router.get('/', (req, res) => {
 
 router.post('/user/authenticate', userService.authenticate);
 router.post('/user/prueba1', userService.prueba1);
+router.post('/user/sendMail', mailService.sendMail);
 
 // ---------------------------------------------------------
 // route middleware to authenticate and check token

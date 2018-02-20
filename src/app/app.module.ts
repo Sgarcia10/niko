@@ -12,7 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './_guards/auth-guard.service';
 import { AlertComponent } from './_directives/index';
-import { AlertService, AuthenticationService, UserService } from './_services/index';
+import { AlertService, AuthenticationService, UserService, MailService } from './_services/index';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { NavbarComponent } from './navbar/navbar.component';
 
@@ -37,7 +37,8 @@ import { NavbarComponent } from './navbar/navbar.component';
       AuthGuard,
       AlertService,
       AuthenticationService,
-      UserService
+      UserService,
+      MailService
   ],
   bootstrap: [AppComponent]
 })

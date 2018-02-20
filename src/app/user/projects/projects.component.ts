@@ -113,6 +113,10 @@ export class ProjectsComponent implements OnInit {
         });
   }
 
+  private cancelProject(){
+      this.newProject = false;
+  }
+
   private saveProject()
   {
       window.alert('Sus respuestas serán guardadas. Por lo tanto, puede salir y continuar cuando desee.');
@@ -135,7 +139,8 @@ export class ProjectsComponent implements OnInit {
       .subscribe(
         data => {
             survey = data;
-            if (survey){
+            console.log(data);
+            if (survey._id){
               this.newProject = true;
               this.currentProject = new Project('', survey._id, '', '', '', '', 'individual', '',
                 '', '', this.currentUser);
